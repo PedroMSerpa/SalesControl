@@ -1278,6 +1278,116 @@ label select {
   background: color-mix(in srgb, var(--primary) 12%, var(--surface));
 }
 
+.account-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.account-tabs button,
+.order-filter-row .secondary-button.is-active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, var(--surface));
+}
+
+.account-tabs button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-soft);
+  color: var(--text);
+}
+
+.account-tabs button.active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, var(--surface));
+}
+
+.account-panel {
+  display: none;
+}
+
+.account-panel.active {
+  display: block;
+}
+
+.account-grid,
+.account-card-list,
+.order-board {
+  display: grid;
+  gap: 12px;
+}
+
+.account-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.account-grid article,
+.account-card,
+.order-card,
+.order-column {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.account-grid article,
+.account-card,
+.order-card {
+  display: grid;
+  gap: 8px;
+}
+
+.order-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.timeline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timeline span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.timeline span.active {
+  background: color-mix(in srgb, var(--primary) 14%, var(--surface));
+  color: var(--primary);
+}
+
+.order-board {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.order-column {
+  align-content: start;
+  gap: 10px;
+  background: var(--surface-soft);
+}
+
+.order-column h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.order-card select {
+  width: 100%;
+}
+
 .nav-list {
   max-height: calc(100vh - 130px);
   overflow-y: auto;
