@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+coverage/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+*.key
+*.p12
+*.crt
+serviceAccountKey.json
+firebase-adminsdk*.json
+google-services.json
+GoogleService-Info.plist
+
+# Firebase local files
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS and editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
