@@ -28,6 +28,8 @@ const icons = {
   cart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>',
 };
 
+const orderStatuses = ['Novos pedidos', 'Aguardando pagamento', 'Pagamento aprovado', 'Em separacao', 'Prontos para envio', 'Enviados', 'Entregues', 'Cancelados'];
+
 const defaultProducts = [
   { id: 'p1', name: 'CRM Pro Anual', internalCode: 'SOF-001', barcode: '7891000000011', description: 'Licenca anual do CRM Pro', category: 'Software', costPrice: 740, salePrice: 1890, stock: 42, minStock: 10, image: '', supplier: 'SalesCloud Labs', active: true, createdAt: '2026-01-15' },
   { id: 'p2', name: 'Scanner Fiscal X2', internalCode: 'EQP-014', barcode: '7891000000141', description: 'Scanner para operacao fiscal', category: 'Equipamento', costPrice: 820, salePrice: 1380, stock: 8, minStock: 10, image: '', supplier: 'Norte Tech', active: true, createdAt: '2026-02-04' },
@@ -103,10 +105,32 @@ const defaultCategories = [
   { id: 'cat3', name: 'Servico', subcategory: 'Consultoria', brand: 'Equipe interna', collection: 'Implantacao', department: 'Servicos', image: '', order: 3, active: true, keywords: 'treinamento, onboarding, implantacao' },
 ];
 
+const defaultCoupons = [
+  { code: 'PRIMEIRACOMPRA', type: 'percent', value: 10, startsAt: '2026-01-01', expiresAt: '2026-12-31', minPurchase: 100, usageLimit: 200, products: 'Todos', categories: 'Todas', customers: 'Novos clientes', active: true },
+  { code: 'BEMVINDO10', type: 'percent', value: 10, startsAt: '2026-01-01', expiresAt: '2026-12-31', minPurchase: 0, usageLimit: 500, products: 'Todos', categories: 'Todas', customers: 'Todos', active: true },
+  { code: 'FRETEGRATIS', type: 'fixed', value: 18, startsAt: '2026-07-01', expiresAt: '2026-08-31', minPurchase: 250, usageLimit: 100, products: 'Selecionados', categories: 'Equipamento', customers: 'Todos', active: true },
+];
+
+const defaultReviews = [
+  { id: 'r1', productId: 'p1', customerEmail: 'cliente@salescontrol.local', orderId: 'S-0001', productScore: 5, serviceScore: 5, deliveryScore: 4, qualityScore: 5, valueScore: 4, comment: 'Produto ajudou bastante na operacao.', media: '', recommended: true, visible: true, answer: 'Obrigado pela avaliacao!' },
+];
+
+const defaultQuestions = [
+  { id: 'q1', productId: 'p1', customerEmail: 'cliente@salescontrol.local', question: 'Esse produto possui garantia?', answer: 'Sim, o produto possui garantia de 12 meses.', status: 'Respondida' },
+];
+
+const defaultMessages = [
+  { id: 'm1', orderId: 'S-0001', customerEmail: 'cliente@salescontrol.local', subject: 'Entrega', message: 'Gostaria de confirmar o prazo de entrega.', responsible: 'Ana Martins', status: 'Aberto', date: '2026-07-11' },
+];
+
+const defaultReturns = [
+  { id: 'd1', orderId: 'S-0001', productId: 'p1', customerEmail: 'cliente@salescontrol.local', type: 'Troca', reason: 'Produto com defeito', description: 'Solicitacao de exemplo.', images: '', status: 'Solicitacao aberta', date: '2026-07-11' },
+];
+
 const permissions = {
-  Administrador: ['admin', 'shop', 'catalog'],
+  Administrador: ['admin', 'shop', 'catalog', 'orders'],
   Vendedor: ['shop', 'catalog'],
-  Cliente: ['shop'],
+  Cliente: ['shop', 'account'],
 };
 
 const state = {
@@ -139,6 +163,8 @@ const state = {
   savedForLater: JSON.parse(localStorage.getItem('sales-control-saved-cart') || '[]'),
   recentViews: JSON.parse(localStorage.getItem('sales-control-recent-views') || '[]'),
   clientSession: JSON.parse(localStorage.getItem('sales-control-client-session') || 'null'),
+  accountTab: 'profile',
+  accountOrderFilter: 'Todos',
   session: JSON.parse(localStorage.getItem('sales-control-session') || 'null'),
 };
 
@@ -162,6 +188,11 @@ let financeMovements = JSON.parse(localStorage.getItem('sales-control-finance') 
 let companySettings = JSON.parse(localStorage.getItem('sales-control-settings') || 'null') || defaultCompanySettings;
 let customGoals = JSON.parse(localStorage.getItem('sales-control-goals') || 'null') || defaultCustomGoals;
 let categories = JSON.parse(localStorage.getItem('sales-control-categories') || 'null') || defaultCategories;
+let coupons = JSON.parse(localStorage.getItem('sales-control-coupons') || 'null') || defaultCoupons;
+let reviews = JSON.parse(localStorage.getItem('sales-control-reviews') || 'null') || defaultReviews;
+let questions = JSON.parse(localStorage.getItem('sales-control-questions') || 'null') || defaultQuestions;
+let messages = JSON.parse(localStorage.getItem('sales-control-messages') || 'null') || defaultMessages;
+let returnRequests = JSON.parse(localStorage.getItem('sales-control-returns') || 'null') || defaultReturns;
 
 function normalizeSales(rows) {
   return rows.map((sale, index) => {
@@ -242,6 +273,11 @@ function saveAll() {
   localStorage.setItem('sales-control-saved-cart', JSON.stringify(state.savedForLater));
   localStorage.setItem('sales-control-recent-views', JSON.stringify(state.recentViews));
   localStorage.setItem('sales-control-client-session', JSON.stringify(state.clientSession));
+  localStorage.setItem('sales-control-coupons', JSON.stringify(coupons));
+  localStorage.setItem('sales-control-reviews', JSON.stringify(reviews));
+  localStorage.setItem('sales-control-questions', JSON.stringify(questions));
+  localStorage.setItem('sales-control-messages', JSON.stringify(messages));
+  localStorage.setItem('sales-control-returns', JSON.stringify(returnRequests));
 }
 
 function renderIcons() {
@@ -323,6 +359,31 @@ function saleTotal(sale) {
 
 function isPaidSale(sale) {
   return ['Pago', 'Finalizada'].includes(sale.status);
+}
+
+function orderStage(sale) {
+  if (['Cancelada', 'Cancelado'].includes(sale.status)) return 'Cancelados';
+  if (sale.status === 'Pendente') return 'Aguardando pagamento';
+  if (sale.deliveryStatus) return sale.deliveryStatus;
+  if (isPaidSale(sale)) return 'Pagamento aprovado';
+  return 'Novos pedidos';
+}
+
+function orderTimeline(sale) {
+  const stage = orderStage(sale);
+  const steps = ['Pedido realizado', 'Pagamento aprovado', 'Produto em separacao', 'Produto enviado', 'Saiu para entrega', 'Pedido entregue'];
+  const activeMap = {
+    'Novos pedidos': 0,
+    'Aguardando pagamento': 0,
+    'Pagamento aprovado': 1,
+    'Em separacao': 2,
+    'Prontos para envio': 2,
+    Enviados: 3,
+    Entregues: 5,
+    Cancelados: 0,
+  };
+  const active = activeMap[stage] ?? 0;
+  return steps.map((step, index) => ({ step, active: index <= active }));
 }
 
 function shopMeta(product) {
@@ -912,6 +973,112 @@ function renderCategoryAdmin() {
   bindCategoryActions();
 }
 
+function renderAccount() {
+  const client = state.clientSession || { name: 'Cliente visitante', cpf: '-', email: '-', phone: '-', birthDate: '-' };
+  const clientOrders = sales
+    .filter((sale) => saleCustomer(sale).email === client.email || sale.customerId === customers.find((customer) => customer.email === client.email)?.id)
+    .filter((sale) => {
+      if (state.accountOrderFilter === 'Todos') return true;
+      return orderStage(sale) === state.accountOrderFilter || sale.status === state.accountOrderFilter;
+    });
+  document.querySelectorAll('[data-account-tab]').forEach((button) => button.classList.toggle('active', button.dataset.accountTab === state.accountTab));
+  document.querySelectorAll('[data-account-panel]').forEach((panel) => panel.classList.toggle('active', panel.dataset.accountPanel === state.accountTab));
+  document.getElementById('accountProfile').innerHTML = `
+    <div class="account-grid">
+      <article><strong>${client.name}</strong><span>${client.email}</span></article>
+      <article><strong>CPF</strong><span>${client.cpf || '-'}</span></article>
+      <article><strong>Telefone</strong><span>${client.phone || '-'}</span></article>
+      <article><strong>Nascimento</strong><span>${client.birthDate ? formatDate(client.birthDate) : '-'}</span></article>
+    </div>
+  `;
+  document.getElementById('accountAddresses').innerHTML = `
+    <div class="account-grid">
+      <article><strong>Endereco principal</strong><span>${customers.find((customer) => customer.email === client.email)?.address || 'Endereco nao cadastrado'}</span></article>
+      <article><strong>Entrega padrao</strong><span>${state.shippingMethod}</span></article>
+    </div>
+  `;
+  document.getElementById('accountOrders').innerHTML = `
+    <div class="order-filter-row">${['Todos', 'Novos pedidos', 'Aguardando pagamento', 'Pagamento aprovado', 'Em separacao', 'Enviados', 'Entregues', 'Cancelados', 'Devolvido'].map((status) => `<button class="secondary-button ${state.accountOrderFilter === status ? 'is-active' : ''}" data-client-order-filter="${status}" type="button">${status}</button>`).join('')}</div>
+    <div class="account-card-list">${clientOrders.map(accountOrderCard).join('') || '<span class="muted">Nenhum pedido encontrado.</span>'}</div>
+  `;
+  document.getElementById('accountFavorites').innerHTML = `<div class="account-card-list">${state.savedForLater.map((id) => byId(products, id)).filter(Boolean).map((product) => `
+    <article class="account-card">
+      <strong>${product.name}</strong>
+      <span>${money(shopMeta(product).promoPrice)} | ${product.stock > 0 ? 'Em estoque' : 'Sem estoque'}</span>
+      <div class="card-actions">
+        <button class="secondary-button" data-remove-favorite="${product.id}" type="button">Remover</button>
+        <button class="primary-button" data-add-cart="${product.id}" type="button">Adicionar ao carrinho</button>
+      </div>
+    </article>
+  `).join('') || '<span class="muted">Nenhum favorito salvo.</span>'}</div>`;
+  document.getElementById('accountCoupons').innerHTML = `<div class="account-card-list">${coupons.filter((coupon) => coupon.active).map((coupon) => `
+    <article class="account-card"><strong>${coupon.code}</strong><span>${coupon.type === 'percent' ? `${coupon.value}%` : money(coupon.value)} | minimo ${money(coupon.minPurchase)} | validade ${formatDate(coupon.expiresAt)}</span></article>
+  `).join('')}</div>`;
+  document.getElementById('accountReviews').innerHTML = `<div class="account-card-list">${reviews.filter((review) => review.customerEmail === client.email).map((review) => `
+    <article class="account-card"><strong>${byId(products, review.productId)?.name || 'Produto'}</strong><span>Produto ${review.productScore}/5 | Entrega ${review.deliveryScore}/5 | ${review.recommended ? 'Recomenda' : 'Nao recomenda'}</span><p>${review.comment}</p></article>
+  `).join('') || '<span class="muted">Avalie um pedido entregue para aparecer aqui.</span>'}</div>`;
+  document.getElementById('accountQuestions').innerHTML = `<div class="account-card-list">${questions.filter((question) => question.customerEmail === client.email).map((question) => `
+    <article class="account-card"><strong>${byId(products, question.productId)?.name || 'Produto'}</strong><span>${question.question}</span><p>${question.answer || 'Aguardando resposta da loja.'}</p></article>
+  `).join('') || '<span class="muted">Nenhuma pergunta enviada.</span>'}</div>`;
+  document.getElementById('accountPayments').innerHTML = `<div class="account-card-list"><article class="account-card"><strong>Cartao final 1234</strong><span>Credito salvo para compras futuras.</span></article><article class="account-card"><strong>Pix</strong><span>Forma favorita para desconto rapido.</span></article></div>`;
+  document.getElementById('accountReturns').innerHTML = `<div class="account-card-list">${returnRequests.filter((request) => request.customerEmail === client.email).map((request) => `
+    <article class="account-card"><strong>${request.type} | ${request.orderId}</strong><span>${request.reason} | ${request.status}</span><p>${request.description}</p></article>
+  `).join('') || '<span class="muted">Nenhuma solicitacao de troca, devolucao ou reembolso.</span>'}</div>`;
+  document.getElementById('accountMessages').innerHTML = `<div class="account-card-list">${messages.filter((message) => message.customerEmail === client.email).map((message) => `
+    <article class="account-card"><strong>${message.subject} | ${message.orderId}</strong><span>${message.status} | Responsavel: ${message.responsible}</span><p>${message.message}</p></article>
+  `).join('') || '<span class="muted">Nenhuma mensagem de atendimento.</span>'}</div>`;
+  document.getElementById('accountSecurity').innerHTML = `<div class="account-grid"><article><strong>Senha</strong><span>Protegida no prototipo local.</span></article><article><strong>Firebase Auth</strong><span>Preparado para e-mail, Google, codigo por e-mail e telefone.</span></article></div>`;
+  bindAccountActions();
+}
+
+function accountOrderCard(sale) {
+  const productsText = sale.items.map((item) => `${byId(products, item.productId)?.name || 'Produto'} x${item.quantity}`).join(', ');
+  const timeline = orderTimeline(sale).map((item) => `<span class="${item.active ? 'active' : ''}">${item.step}</span>`).join('');
+  return `
+    <article class="account-card order-account-card">
+      <div class="card-head"><strong>${sale.id}</strong><span class="status ${statusClass(sale.status)}">${orderStage(sale)}</span></div>
+      <span>${formatDate(sale.date)} | ${productsText}</span>
+      <div class="metric-line"><span>Valor</span><strong>${money(saleTotal(sale))}</strong></div>
+      <div class="metric-line"><span>Pagamento</span><strong>${sale.payment}</strong></div>
+      <div class="metric-line"><span>Endereco</span><strong>${sale.deliveryAddress || 'Endereco do checkout'}</strong></div>
+      <div class="metric-line"><span>Rastreio</span><strong>${sale.trackingCode || 'Aguardando envio'}</strong></div>
+      <div class="timeline">${timeline}</div>
+      <div class="card-actions">
+        <button class="secondary-button" data-support-order="${sale.id}" type="button">Suporte</button>
+        <button class="secondary-button" data-return-order="${sale.id}" type="button">Troca/devolucao</button>
+        <button class="primary-button" data-review-order="${sale.id}" type="button">Avaliar</button>
+      </div>
+    </article>
+  `;
+}
+
+function renderAdminOrders() {
+  const orderSales = sales.filter((sale) => sale.id.startsWith('WEB-') || sale.notes?.includes('Checkout loja'));
+  document.getElementById('adminOrderBoard').innerHTML = orderStatuses.map((status) => `
+    <section class="order-column">
+      <h3>${status}</h3>
+      ${orderSales.filter((sale) => orderStage(sale) === status).map((sale) => `
+        <article class="order-card">
+          <strong>${sale.id}</strong>
+          <span>Cliente: ${saleCustomer(sale).name}</span>
+          <span>Valor: ${money(saleTotal(sale))}</span>
+          <span>Pagamento: ${sale.payment}</span>
+          <span>Entrega: ${sale.shippingMethod || sale.deliveryStatus || 'Transportadora'}</span>
+          <select data-order-stage="${sale.id}">
+            ${orderStatuses.map((option) => `<option ${option === status ? 'selected' : ''}>${option}</option>`).join('')}
+          </select>
+        </article>
+      `).join('') || '<span class="muted">Sem pedidos.</span>'}
+    </section>
+  `).join('');
+  document.getElementById('adminMessages').innerHTML = messages.map((message) => notificationCard({ title: `${message.subject} | ${message.orderId}`, text: `${message.customerEmail} - ${message.message}`, tone: message.status === 'Aberto' ? 'warning' : 'info' })).join('');
+  document.getElementById('adminQaReviews').innerHTML = [
+    ...questions.map((question) => ({ title: `Pergunta: ${byId(products, question.productId)?.name || 'Produto'}`, text: `${question.question} | ${question.answer || 'Sem resposta'}`, tone: question.answer ? 'success' : 'warning' })),
+    ...reviews.map((review) => ({ title: `Avaliacao: ${byId(products, review.productId)?.name || 'Produto'}`, text: `Media ${(review.productScore + review.serviceScore + review.deliveryScore + review.qualityScore + review.valueScore) / 5}/5 - ${review.comment}`, tone: review.visible ? 'info' : 'danger' })),
+  ].map(notificationCard).join('');
+  bindAdminOrderActions();
+}
+
 function renderCart() {
   const rows = state.cart.map((item) => {
     const product = byId(products, item.productId);
@@ -1004,6 +1171,8 @@ function render() {
   renderNotifications();
   renderShop();
   renderCategoryAdmin();
+  renderAccount();
+  renderAdminOrders();
   renderSelects();
   renderSettings();
   renderSaleDraft();
@@ -1523,6 +1692,77 @@ function bindCategoryActions() {
     button.onclick = () => {
       const category = categories.find((item) => item.id === button.dataset.toggleCategory);
       category.active = !category.active;
+      saveAll();
+      render();
+    };
+  });
+}
+
+function bindAccountActions() {
+  const openClientAccountButton = document.getElementById('openClientAuthFromAccount');
+  if (openClientAccountButton) {
+    openClientAccountButton.onclick = () => openModal('clientAuthModal');
+  }
+  document.querySelectorAll('[data-account-tab]').forEach((button) => {
+    button.onclick = () => {
+      state.accountTab = button.dataset.accountTab;
+      renderAccount();
+    };
+  });
+  document.querySelectorAll('[data-client-order-filter]').forEach((button) => {
+    button.onclick = () => {
+      state.accountOrderFilter = button.dataset.clientOrderFilter;
+      renderAccount();
+    };
+  });
+  document.querySelectorAll('[data-remove-favorite]').forEach((button) => {
+    button.onclick = () => {
+      state.savedForLater = state.savedForLater.filter((id) => id !== button.dataset.removeFavorite);
+      saveAll();
+      renderAccount();
+      renderShop();
+    };
+  });
+  document.querySelectorAll('[data-support-order]').forEach((button) => {
+    button.onclick = () => {
+      const sale = sales.find((item) => item.id === button.dataset.supportOrder);
+      if (!sale) return;
+      messages = [{ id: `m${Date.now()}`, orderId: sale.id, customerEmail: state.clientSession?.email || saleCustomer(sale).email, subject: 'Suporte do pedido', message: 'Cliente solicitou atendimento pelo painel Minha conta.', responsible: 'Administrador', status: 'Aberto', date: new Date().toISOString().slice(0, 10) }, ...messages];
+      saveAll();
+      render();
+      alert('Solicitacao de suporte enviada ao painel administrativo.');
+    };
+  });
+  document.querySelectorAll('[data-return-order]').forEach((button) => {
+    button.onclick = () => {
+      const sale = sales.find((item) => item.id === button.dataset.returnOrder);
+      if (!sale) return;
+      returnRequests = [{ id: `d${Date.now()}`, orderId: sale.id, productId: sale.productId, customerEmail: state.clientSession?.email || saleCustomer(sale).email, type: 'Devolucao', reason: 'Solicitacao pelo cliente', description: 'Cliente abriu uma solicitacao de troca/devolucao/reembolso.', images: '', status: 'Solicitacao aberta', date: new Date().toISOString().slice(0, 10) }, ...returnRequests];
+      saveAll();
+      render();
+      alert('Solicitacao registrada.');
+    };
+  });
+  document.querySelectorAll('[data-review-order]').forEach((button) => {
+    button.onclick = () => {
+      const sale = sales.find((item) => item.id === button.dataset.reviewOrder);
+      if (!sale) return;
+      reviews = [{ id: `r${Date.now()}`, productId: sale.productId, customerEmail: state.clientSession?.email || saleCustomer(sale).email, orderId: sale.id, productScore: 5, serviceScore: 5, deliveryScore: 5, qualityScore: 5, valueScore: 5, comment: 'Avaliacao registrada pelo cliente.', media: '', recommended: true, visible: true, answer: '' }, ...reviews];
+      saveAll();
+      render();
+      alert('Avaliacao enviada.');
+    };
+  });
+}
+
+function bindAdminOrderActions() {
+  document.querySelectorAll('[data-order-stage]').forEach((select) => {
+    select.onchange = () => {
+      const sale = sales.find((item) => item.id === select.dataset.orderStage);
+      if (!sale) return;
+      sale.deliveryStatus = select.value;
+      if (select.value === 'Cancelados') sale.status = 'Cancelada';
+      if (select.value === 'Entregues') sale.status = 'Finalizada';
       saveAll();
       render();
     };

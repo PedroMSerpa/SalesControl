@@ -93,6 +93,12 @@
           <button class="nav-item" data-view="shop" data-permission="shop" title="Loja">
             <span data-icon="store"></span><span>Loja</span>
           </button>
+          <button class="nav-item" data-view="account" data-permission="account" title="Minha conta">
+            <span data-icon="userPlus"></span><span>Minha conta</span>
+          </button>
+          <button class="nav-item" data-view="orders" data-permission="admin" title="Pedidos">
+            <span data-icon="packageCheck"></span><span>Pedidos</span>
+          </button>
           <button class="nav-item" data-view="sales" data-permission="admin" title="Vendas">
             <span data-icon="receipt"></span><span>Vendas</span>
           </button>
@@ -416,6 +422,74 @@
               </table>
             </div>
           </section>
+        </section>
+
+        <section class="content-view" id="accountView">
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Cliente</p>
+                <h2>Minha conta</h2>
+              </div>
+              <button class="primary-button" id="openClientAuthFromAccount" type="button"><span data-icon="users"></span><span>Atualizar dados</span></button>
+            </div>
+            <div class="account-tabs" id="accountTabs">
+              <button class="active" data-account-tab="profile">Dados</button>
+              <button data-account-tab="addresses">Enderecos</button>
+              <button data-account-tab="orders">Pedidos</button>
+              <button data-account-tab="favorites">Favoritos</button>
+              <button data-account-tab="coupons">Cupons</button>
+              <button data-account-tab="reviews">Avaliacoes</button>
+              <button data-account-tab="questions">Perguntas</button>
+              <button data-account-tab="payments">Pagamentos</button>
+              <button data-account-tab="returns">Trocas</button>
+              <button data-account-tab="messages">Atendimento</button>
+              <button data-account-tab="security">Seguranca</button>
+            </div>
+            <div class="account-panel active" data-account-panel="profile" id="accountProfile"></div>
+            <div class="account-panel" data-account-panel="addresses" id="accountAddresses"></div>
+            <div class="account-panel" data-account-panel="orders" id="accountOrders"></div>
+            <div class="account-panel" data-account-panel="favorites" id="accountFavorites"></div>
+            <div class="account-panel" data-account-panel="coupons" id="accountCoupons"></div>
+            <div class="account-panel" data-account-panel="reviews" id="accountReviews"></div>
+            <div class="account-panel" data-account-panel="questions" id="accountQuestions"></div>
+            <div class="account-panel" data-account-panel="payments" id="accountPayments"></div>
+            <div class="account-panel" data-account-panel="returns" id="accountReturns"></div>
+            <div class="account-panel" data-account-panel="messages" id="accountMessages"></div>
+            <div class="account-panel" data-account-panel="security" id="accountSecurity"></div>
+          </section>
+        </section>
+
+        <section class="content-view" id="ordersView">
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Administrativo</p>
+                <h2>Central de pedidos da loja</h2>
+              </div>
+            </div>
+            <div class="order-board" id="adminOrderBoard"></div>
+          </section>
+          <div class="dashboard-grid">
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Atendimento</p>
+                  <h2>Mensagens dos clientes</h2>
+                </div>
+              </div>
+              <div class="notification-list" id="adminMessages"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Loja</p>
+                  <h2>Avaliacoes e perguntas</h2>
+                </div>
+              </div>
+              <div class="notification-list" id="adminQaReviews"></div>
+            </section>
+          </div>
         </section>
 
         <section class="content-view" id="salesView">
