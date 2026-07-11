@@ -17,6 +17,10 @@ const icons = {
   userPlus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>',
   mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>',
   google: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 12h8"/></svg>',
+  history: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/><path d="M12 7v5l3 2"/></svg>',
+  packageCheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m21 8-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="m9 16 2 2 4-5"/></svg>',
+  wallet: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7H5a2 2 0 0 1 0-4h13"/><path d="M5 7h16v14H5a2 2 0 0 1-2-2V5"/><path d="M16 14h.01"/></svg>',
+  settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5z"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1A2 2 0 1 1 7.1 4l.1.1a1.7 1.7 0 0 0 1.9.3h.1a1.7 1.7 0 0 0 1-1.6V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6h.1a1.7 1.7 0 0 0 1.9-.3l.1-.1A2 2 0 1 1 20 7.1l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.6 1h.1a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.8 1z"/></svg>',
 };
 
 const defaultProducts = [
@@ -59,6 +63,36 @@ const defaultSales = [
   { date: '2026-06-22', customerId: 'c4', productId: 'p1', seller: 'Ana Martins', status: 'Pago', payment: 'Cartao de credito', amount: 1890 },
 ];
 
+const defaultInventoryMovements = [
+  { date: '2026-07-11', productId: 'p2', type: 'Entrada', quantity: 12, responsible: 'Diego Alves', description: 'Reposicao do fornecedor' },
+  { date: '2026-07-10', productId: 'p4', type: 'Saida', quantity: 2, responsible: 'Ana Martins', description: 'Venda finalizada' },
+  { date: '2026-07-09', productId: 'p5', type: 'Ajuste', quantity: 3, responsible: 'Diego Alves', description: 'Conferencia manual' },
+];
+
+const defaultFinanceMovements = [
+  { id: 'f1', type: 'Entrada', amount: 1890, category: 'Venda', date: '2026-07-11', description: 'Venda Mercado Aurora', responsible: 'Ana Martins', payment: 'Pix', receipt: 'REC-0001', status: 'Pago' },
+  { id: 'f2', type: 'Conta a receber', amount: 1380, category: 'Venda', date: '2026-07-10', description: 'Venda Clima Sul', responsible: 'Bruno Costa', payment: 'Boleto', receipt: '', status: 'Pendente' },
+  { id: 'f3', type: 'Despesa', amount: 420, category: 'Operacional', date: '2026-07-08', description: 'Material de escritorio', responsible: 'Marina Lopes', payment: 'Cartao de debito', receipt: '', status: 'Pago' },
+];
+
+const defaultCompanySettings = {
+  companyName: 'SalesControl Demo',
+  cnpj: '00.000.000/0001-00',
+  address: 'Av. Comercial, 100',
+  phone: '(11) 4000-0000',
+  email: 'contato@salescontrol.local',
+  logo: '',
+  currency: 'BRL',
+  paymentMethods: 'Pix, Dinheiro, Cartao de credito, Cartao de debito, Boleto, Transferencia',
+  categories: 'Software, Equipamento, Servico',
+  discountRules: 'Desconto maximo sugerido: 10%',
+  receiptInfo: 'Obrigado pela preferencia. Este comprovante e gerado pelo SalesControl.',
+};
+
+const defaultCustomGoals = [
+  { id: 'g1', period: 'Mensal', type: 'Por equipe', targetName: 'Equipe comercial', targetAmount: 50000, achievedAmount: 37500 },
+];
+
 const permissions = {
   Administrador: ['all', 'sales', 'customers', 'stock', 'reports', 'admin'],
   Gerente: ['all', 'sales', 'customers', 'reports'],
@@ -74,6 +108,13 @@ const state = {
   stockFilter: 'all',
   productSearch: '',
   categoryFilter: 'Todas',
+  historySearch: '',
+  historySeller: 'Todos',
+  historyPayment: 'Todas',
+  historyStatus: 'Todos',
+  historyStartDate: '',
+  historyEndDate: '',
+  saleDraftItems: [],
   session: JSON.parse(localStorage.getItem('sales-control-session') || 'null'),
 };
 
@@ -81,15 +122,31 @@ let products = JSON.parse(localStorage.getItem('sales-control-products') || 'nul
 let customers = JSON.parse(localStorage.getItem('sales-control-customers') || 'null') || defaultCustomers;
 let users = JSON.parse(localStorage.getItem('sales-control-users') || 'null') || defaultUsers;
 let sales = normalizeSales(JSON.parse(localStorage.getItem('sales-control-sales') || 'null') || defaultSales);
+let inventoryMovements = JSON.parse(localStorage.getItem('sales-control-inventory') || 'null') || defaultInventoryMovements;
+let financeMovements = JSON.parse(localStorage.getItem('sales-control-finance') || 'null') || defaultFinanceMovements;
+let companySettings = JSON.parse(localStorage.getItem('sales-control-settings') || 'null') || defaultCompanySettings;
+let customGoals = JSON.parse(localStorage.getItem('sales-control-goals') || 'null') || defaultCustomGoals;
 
 function normalizeSales(rows) {
-  return rows.map((sale) => {
+  return rows.map((sale, index) => {
     const customer = customers.find((item) => item.name === sale.customer);
     const product = products.find((item) => item.name === sale.product);
+    const productId = sale.productId || product?.id || 'p1';
+    const amount = Number(sale.amount || sale.total || 0);
+    const items = sale.items || [{ productId, quantity: 1, unitPrice: amount, total: amount }];
     return {
       ...sale,
+      id: sale.id || `S-${String(index + 1).padStart(4, '0')}`,
       customerId: sale.customerId || customer?.id || 'c1',
-      productId: sale.productId || product?.id || 'p1',
+      productId,
+      items,
+      discount: Number(sale.discount || 0),
+      surcharge: Number(sale.surcharge || 0),
+      subtotal: Number(sale.subtotal || items.reduce((sum, item) => sum + Number(item.total || 0), 0)),
+      total: Number(sale.total || amount),
+      amount,
+      installments: Number(sale.installments || 1),
+      notes: sale.notes || '',
     };
   });
 }
@@ -113,8 +170,14 @@ function saleProduct(sale) {
 function statusClass(status) {
   return {
     Pago: 'paid',
+    Finalizada: 'paid',
     Pendente: 'pending',
+    'Em andamento': 'medium',
+    'Parcialmente paga': 'medium',
     Cancelado: 'cancelled',
+    Cancelada: 'cancelled',
+    Reembolsada: 'cancelled',
+    Atrasado: 'cancelled',
     Ativo: 'active',
     Inativo: 'cancelled',
     Prospect: 'medium',
@@ -134,6 +197,10 @@ function saveAll() {
   localStorage.setItem('sales-control-products', JSON.stringify(products));
   localStorage.setItem('sales-control-customers', JSON.stringify(customers));
   localStorage.setItem('sales-control-users', JSON.stringify(users));
+  localStorage.setItem('sales-control-inventory', JSON.stringify(inventoryMovements));
+  localStorage.setItem('sales-control-finance', JSON.stringify(financeMovements));
+  localStorage.setItem('sales-control-settings', JSON.stringify(companySettings));
+  localStorage.setItem('sales-control-goals', JSON.stringify(customGoals));
 }
 
 function renderIcons() {
@@ -163,9 +230,13 @@ function applySession() {
   }
 }
 
-function loginUser({ email, role, inactive = false, provider = 'email' }) {
+function loginUser({ email, password = '', role, inactive = false, provider = 'email' }) {
   const existing = users.find((user) => user.email.toLowerCase() === email.toLowerCase());
   const user = existing || { name: email.split('@')[0], email, role, status: 'Ativo', target: 0, achieved: 0 };
+  if (provider === 'email' && (role || user.role) === 'Administrador' && password !== 'admin1234') {
+    document.getElementById('loginFeedback').textContent = 'Senha incorreta para Administrador. Use admin1234.';
+    return;
+  }
   if (inactive || user.status === 'Inativo') {
     document.getElementById('loginFeedback').textContent = 'Usuario inativo. Procure um administrador para reativar o acesso.';
     return;
@@ -175,6 +246,14 @@ function loginUser({ email, role, inactive = false, provider = 'email' }) {
   document.getElementById('loginFeedback').textContent = '';
   applySession();
   render();
+}
+
+function saleTotal(sale) {
+  return Number(sale.total || sale.amount || 0);
+}
+
+function isPaidSale(sale) {
+  return ['Pago', 'Finalizada'].includes(sale.status);
 }
 
 function logoutUser() {
@@ -210,14 +289,14 @@ function periodSales(period) {
 }
 
 function paidTotal(rows) {
-  return rows.filter((sale) => sale.status === 'Pago').reduce((sum, sale) => sum + sale.amount, 0);
+  return rows.filter(isPaidSale).reduce((sum, sale) => sum + saleTotal(sale), 0);
 }
 
 function renderKpis() {
   const today = periodSales('today');
   const month = periodSales('month');
   const previousMonth = periodSales('previousMonth');
-  const paid = sales.filter((sale) => sale.status === 'Pago');
+  const paid = sales.filter(isPaidSale);
   const ticket = paid.length ? paidTotal(paid) / paid.length : 0;
   const lowStock = products.filter((product) => product.active && product.stock <= product.minStock).length;
   const comparison = paidTotal(previousMonth) ? Math.round(((paidTotal(month) - paidTotal(previousMonth)) / paidTotal(previousMonth)) * 100) : 100;
@@ -230,7 +309,7 @@ function renderKpis() {
     { label: 'Estoque baixo', value: String(lowStock), trend: 'alerta ativo', icon: 'box', tone: lowStock ? 'danger' : '' },
     { label: 'Clientes cadastrados', value: String(customers.length), trend: `${customers.filter((item) => item.status === 'Ativo').length} ativos`, icon: 'users' },
     { label: 'Meta mensal', value: '78%', trend: 'time comercial', icon: 'target' },
-    { label: 'Pendencias', value: money(sales.filter((sale) => sale.status === 'Pendente').reduce((sum, sale) => sum + sale.amount, 0)), trend: 'a receber', icon: 'bell', tone: 'warning' },
+    { label: 'Pendencias', value: money(sales.filter((sale) => sale.status === 'Pendente').reduce((sum, sale) => sum + saleTotal(sale), 0)), trend: 'a receber', icon: 'bell', tone: 'warning' },
   ];
 
   document.getElementById('kpiGrid').innerHTML = kpis
@@ -260,7 +339,7 @@ function renderTables() {
           <td>${sale.seller}</td>
           <td><span class="status ${statusClass(sale.status)}">${sale.status}</span></td>
           <td>${sale.payment}</td>
-          <td>${money(sale.amount)}</td>
+          <td>${money(saleTotal(sale))}</td>
         </tr>
       `;
     })
@@ -275,7 +354,7 @@ function renderTables() {
         <td>${saleProduct(sale).name}</td>
         <td>${sale.seller}</td>
         <td><span class="status ${statusClass(sale.status)}">${sale.status}</span></td>
-        <td>${money(sale.amount)}</td>
+        <td>${money(saleTotal(sale))}</td>
       </tr>
     `)
     .join('');
@@ -309,16 +388,29 @@ function renderGoals() {
         </article>
       `;
     })
+    .join('') + customGoals
+    .map((goal) => {
+      const percent = Math.min(Math.round((goal.achievedAmount / goal.targetAmount) * 100), 100);
+      return `
+        <article class="goal-card">
+          <div class="card-head"><strong>${goal.targetName}</strong><span class="status ${percent >= 75 ? 'ok' : 'medium'}">${percent}%</span></div>
+          <span class="muted">${goal.period} | ${goal.type}</span>
+          <div class="progress"><span style="width:${percent}%"></span></div>
+          <div class="metric-line"><span>Meta</span><strong>${money(goal.targetAmount)}</strong></div>
+          <div class="metric-line"><span>Alcancado</span><strong>${money(goal.achievedAmount)}</strong></div>
+        </article>
+      `;
+    })
     .join('');
 }
 
 function productSales(productId) {
-  return sales.filter((sale) => sale.productId === productId && sale.status !== 'Cancelado');
+  return sales.filter((sale) => !['Cancelado', 'Cancelada'].includes(sale.status) && sale.items.some((item) => item.productId === productId));
 }
 
 function renderRankings() {
   const productRows = products
-    .map((product) => ({ name: product.name, value: productSales(product.id).reduce((sum, sale) => sum + sale.amount, 0), count: productSales(product.id).length }))
+    .map((product) => ({ name: product.name, value: productSales(product.id).reduce((sum, sale) => sum + saleTotal(sale), 0), count: productSales(product.id).length }))
     .sort((a, b) => b.value - a.value)
     .slice(0, 5);
   const sellerRows = users
@@ -344,11 +436,11 @@ function renderCustomers() {
   const html = customers
     .map((customer) => {
       const history = sales.filter((sale) => sale.customerId === customer.id);
-      const paidHistory = history.filter((sale) => sale.status === 'Pago');
-      const total = paidHistory.reduce((sum, sale) => sum + sale.amount, 0);
+      const paidHistory = history.filter(isPaidSale);
+      const total = paidHistory.reduce((sum, sale) => sum + saleTotal(sale), 0);
       const lastSale = history[0];
       const favorite = mostFrequent(history.map((sale) => saleProduct(sale).name));
-      const pending = history.filter((sale) => sale.status === 'Pendente').reduce((sum, sale) => sum + sale.amount, 0);
+      const pending = history.filter((sale) => sale.status === 'Pendente').reduce((sum, sale) => sum + saleTotal(sale), 0);
       return `
         <article class="customer-card detail-card">
           <div class="card-head"><strong>${customer.name}</strong><span class="status ${statusClass(customer.status)}">${customer.status}</span></div>
@@ -419,7 +511,7 @@ function renderPayments() {
         <div class="card-head"><strong>${saleCustomer(sale).name}</strong><span class="status ${statusClass(sale.status)}">${sale.status}</span></div>
         <span class="muted">${sale.payment} | ${formatDate(sale.date)}</span>
         <div class="metric-line"><span>Produto</span><strong>${saleProduct(sale).name}</strong></div>
-        <div class="metric-line"><span>Valor</span><strong>${money(sale.amount)}</strong></div>
+        <div class="metric-line"><span>Valor</span><strong>${money(saleTotal(sale))}</strong></div>
       </article>
     `)
     .join('');
@@ -438,11 +530,135 @@ function renderUsers() {
     .join('');
 }
 
+function filteredHistorySales() {
+  return sales.filter((sale) => {
+    const customer = saleCustomer(sale);
+    const query = state.historySearch.trim().toLowerCase();
+    const matchesQuery = [sale.id, customer.name].join(' ').toLowerCase().includes(query);
+    const matchesSeller = state.historySeller === 'Todos' || sale.seller === state.historySeller;
+    const matchesPayment = state.historyPayment === 'Todas' || sale.payment === state.historyPayment;
+    const matchesStatus = state.historyStatus === 'Todos' || sale.status === state.historyStatus;
+    const matchesStart = !state.historyStartDate || sale.date >= state.historyStartDate;
+    const matchesEnd = !state.historyEndDate || sale.date <= state.historyEndDate;
+    return matchesQuery && matchesSeller && matchesPayment && matchesStatus && matchesStart && matchesEnd;
+  });
+}
+
+function renderHistory() {
+  document.getElementById('historyTable').innerHTML = filteredHistorySales()
+    .map((sale) => `
+      <tr>
+        <td>${sale.id}</td>
+        <td>${formatDate(sale.date)}</td>
+        <td>${saleCustomer(sale).name}</td>
+        <td>${sale.seller}</td>
+        <td>${sale.payment}</td>
+        <td><span class="status ${statusClass(sale.status)}">${sale.status}</span></td>
+        <td>${money(saleTotal(sale))}</td>
+        <td class="table-actions">
+          <button class="secondary-button" data-sale-details="${sale.id}" type="button">Detalhes</button>
+          <button class="secondary-button" data-sale-receipt="${sale.id}" type="button">Comprovante</button>
+          <button class="secondary-button" data-sale-cancel="${sale.id}" type="button">Cancelar</button>
+        </td>
+      </tr>
+    `)
+    .join('');
+  bindHistoryActions();
+}
+
+function renderInventory() {
+  document.getElementById('inventoryTable').innerHTML = inventoryMovements
+    .map((movement) => `
+      <tr>
+        <td>${formatDate(movement.date)}</td>
+        <td>${byId(products, movement.productId)?.name || '-'}</td>
+        <td>${movement.type}</td>
+        <td>${movement.quantity}</td>
+        <td>${movement.responsible}</td>
+        <td>${movement.description || '-'}</td>
+      </tr>
+    `)
+    .join('');
+
+  document.getElementById('stockAlerts').innerHTML = stockNotifications()
+    .map((item) => notificationCard(item))
+    .join('');
+}
+
+function stockNotifications() {
+  const low = products.filter((product) => product.active && product.stock <= product.minStock);
+  const stopped = products.filter((product) => product.active && !sales.some((sale) => sale.items.some((item) => item.productId === product.id)));
+  const manual = inventoryMovements.filter((movement) => ['Ajuste', 'Perda', 'Danificado'].includes(movement.type)).slice(0, 3);
+  return [
+    ...low.map((product) => ({ title: product.stock === 0 ? 'Produto sem estoque' : 'Estoque baixo', text: `${product.name}: ${product.stock} un.`, tone: product.stock === 0 ? 'danger' : 'warning' })),
+    ...manual.map((movement) => ({ title: 'Alteracao manual', text: `${byId(products, movement.productId)?.name || '-'} | ${movement.type}`, tone: 'warning' })),
+    ...stopped.slice(0, 3).map((product) => ({ title: 'Produto parado', text: `${product.name} sem venda recente`, tone: 'info' })),
+  ];
+}
+
+function renderFinance() {
+  const paidIn = financeMovements.filter((item) => item.status === 'Pago' && item.type === 'Entrada').reduce((sum, item) => sum + item.amount, 0);
+  const expenses = financeMovements.filter((item) => ['Saida', 'Despesa'].includes(item.type)).reduce((sum, item) => sum + item.amount, 0);
+  const pending = financeMovements.filter((item) => item.status !== 'Pago').reduce((sum, item) => sum + item.amount, 0);
+  const profit = paidIn - expenses;
+  document.getElementById('financeKpis').innerHTML = [
+    ['Fluxo de caixa', money(paidIn - expenses), 'Entradas menos saidas'],
+    ['Contas a receber', money(pending), 'Pendencias e parcelas'],
+    ['Despesas', money(expenses), 'Saidas registradas'],
+    ['Lucro estimado', money(profit), 'Fechamento parcial'],
+  ].map(([label, value, trend]) => `
+    <article class="kpi-card">
+      <div class="kpi-top"><span class="muted">${label}</span><span class="kpi-icon">${icons.wallet}</span></div>
+      <strong>${value}</strong>
+      <span class="trend">${trend}</span>
+    </article>
+  `).join('');
+
+  document.getElementById('financeGrid').innerHTML = financeMovements
+    .map((item) => `
+      <article class="payment-card">
+        <div class="card-head"><strong>${item.description}</strong><span class="status ${statusClass(item.status)}">${item.status}</span></div>
+        <span class="muted">${item.type} | ${item.category} | ${formatDate(item.date)}</span>
+        <div class="metric-line"><span>Valor</span><strong>${money(item.amount)}</strong></div>
+        <div class="metric-line"><span>Responsavel</span><strong>${item.responsible}</strong></div>
+        <div class="metric-line"><span>Pagamento</span><strong>${item.payment}</strong></div>
+        <div class="metric-line"><span>Comprovante</span><strong>${item.receipt || '-'}</strong></div>
+      </article>
+    `).join('');
+}
+
+function renderNotifications() {
+  const generated = [
+    ...stockNotifications(),
+    ...sales.slice(0, 3).map((sale) => ({ title: sale.status === 'Cancelada' ? 'Venda cancelada' : 'Nova venda', text: `${sale.id} | ${saleCustomer(sale).name}`, tone: sale.status === 'Cancelada' ? 'danger' : 'info' })),
+    ...financeMovements.filter((item) => item.status === 'Atrasado' || item.status === 'Pendente').slice(0, 4).map((item) => ({ title: item.status === 'Atrasado' ? 'Pagamento atrasado' : 'Parcela proxima do vencimento', text: `${item.description} | ${money(item.amount)}`, tone: item.status === 'Atrasado' ? 'danger' : 'warning' })),
+    ...customGoals.filter((goal) => goal.achievedAmount >= goal.targetAmount).map((goal) => ({ title: 'Meta atingida', text: goal.targetName, tone: 'success' })),
+    ...customers.slice(0, 2).map((customer) => ({ title: 'Novo cliente cadastrado', text: customer.name, tone: 'info' })),
+  ];
+  document.getElementById('notificationList').innerHTML = generated.map(notificationCard).join('');
+}
+
+function notificationCard(item) {
+  return `
+    <article class="notification-card ${item.tone || 'info'}">
+      <strong>${item.title}</strong>
+      <span>${item.text}</span>
+    </article>
+  `;
+}
+
+function renderSettings() {
+  const form = document.getElementById('settingsForm');
+  Object.entries(companySettings).forEach(([key, value]) => {
+    if (form.elements[key]) form.elements[key].value = value;
+  });
+}
+
 function renderReports() {
-  const total = sales.reduce((sum, sale) => sum + sale.amount, 0);
+  const total = sales.reduce((sum, sale) => sum + saleTotal(sale), 0);
   const paid = paidTotal(sales);
-  const pending = sales.filter((sale) => sale.status === 'Pendente').reduce((sum, sale) => sum + sale.amount, 0);
-  const conversion = Math.round((sales.filter((sale) => sale.status === 'Pago').length / sales.length) * 100);
+  const pending = sales.filter((sale) => sale.status === 'Pendente').reduce((sum, sale) => sum + saleTotal(sale), 0);
+  const conversion = Math.round((sales.filter(isPaidSale).length / sales.length) * 100);
   const lowStock = products.filter((product) => product.stock <= product.minStock).length;
 
   document.getElementById('reportList').innerHTML = [
@@ -458,12 +674,16 @@ function renderReports() {
 }
 
 function renderSelects() {
-  const statusOptions = ['Todos', 'Pago', 'Pendente', 'Cancelado'];
+  const statusOptions = ['Todos', 'Pago', 'Finalizada', 'Em andamento', 'Pendente', 'Parcialmente paga', 'Cancelada', 'Reembolsada'];
   document.getElementById('salesStatusFilter').innerHTML = statusOptions.map((status) => `<option ${status === state.salesStatus ? 'selected' : ''}>${status}</option>`).join('');
   document.getElementById('productSelect').innerHTML = products.filter((product) => product.active).map((product) => `<option value="${product.id}">${product.name}</option>`).join('');
   document.getElementById('customerSelect').innerHTML = customers.filter((customer) => customer.status !== 'Inativo').map((customer) => `<option value="${customer.id}">${customer.name}</option>`).join('');
   document.getElementById('sellerSelect').innerHTML = users.filter((user) => ['Administrador', 'Vendedor'].includes(user.role) && user.status === 'Ativo').map((user) => `<option>${user.name}</option>`).join('');
   document.getElementById('categoryFilter').innerHTML = ['Todas', ...new Set(products.map((product) => product.category))].map((category) => `<option ${category === state.categoryFilter ? 'selected' : ''}>${category}</option>`).join('');
+  document.getElementById('stockProductSelect').innerHTML = products.map((product) => `<option value="${product.id}">${product.name}</option>`).join('');
+  document.getElementById('historySellerFilter').innerHTML = ['Todos', ...new Set(sales.map((sale) => sale.seller))].map((seller) => `<option ${seller === state.historySeller ? 'selected' : ''}>${seller}</option>`).join('');
+  document.getElementById('historyPaymentFilter').innerHTML = ['Todas', 'Pix', 'Dinheiro', 'Cartao de credito', 'Cartao de debito', 'Boleto', 'Transferencia', 'Pagamento parcelado', 'Pagamento misto'].map((payment) => `<option ${payment === state.historyPayment ? 'selected' : ''}>${payment}</option>`).join('');
+  document.getElementById('historyStatusFilter').innerHTML = statusOptions.map((status) => `<option ${status === state.historyStatus ? 'selected' : ''}>${status}</option>`).join('');
 }
 
 function render() {
@@ -474,9 +694,15 @@ function render() {
   renderCustomers();
   renderProducts();
   renderPayments();
+  renderHistory();
+  renderInventory();
+  renderFinance();
   renderUsers();
   renderReports();
+  renderNotifications();
   renderSelects();
+  renderSettings();
+  renderSaleDraft();
   drawLineChart();
   drawCategoryChart();
   drawPaymentChart();
@@ -508,7 +734,7 @@ function dailySeries(mode) {
     const daySales = sales.filter((sale) => sale.date === date && sale.status !== 'Cancelado');
     return {
       label: date.slice(5).split('-').reverse().join('/'),
-      value: mode === 'orders' ? daySales.length : daySales.reduce((sum, sale) => sum + sale.amount, 0),
+      value: mode === 'orders' ? daySales.length : daySales.reduce((sum, sale) => sum + saleTotal(sale), 0),
     };
   });
 }
@@ -517,7 +743,7 @@ function monthlySeries() {
   const months = {};
   sales.filter((sale) => sale.status !== 'Cancelado').forEach((sale) => {
     const key = sale.date.slice(0, 7);
-    months[key] = (months[key] || 0) + sale.amount;
+    months[key] = (months[key] || 0) + saleTotal(sale);
   });
   return Object.entries(months).sort().map(([month, value]) => ({ label: month.split('-').reverse().join('/'), value }));
 }
@@ -573,7 +799,7 @@ function drawCategoryChart() {
   const canvas = document.getElementById('categoryChart');
   if (!canvas || !state.session) return;
   const totals = products.reduce((acc, product) => {
-    acc[product.category] = sales.filter((sale) => sale.productId === product.id && sale.status !== 'Cancelado').reduce((sum, sale) => sum + sale.amount, acc[product.category] || 0);
+    acc[product.category] = sales.filter((sale) => sale.productId === product.id && !['Cancelado', 'Cancelada'].includes(sale.status)).reduce((sum, sale) => sum + saleTotal(sale), acc[product.category] || 0);
     return acc;
   }, {});
   drawBarsOrLine(canvas, Object.entries(totals).map(([label, value]) => ({ label, value })), 'bar');
@@ -583,7 +809,7 @@ function drawPaymentChart() {
   const canvas = document.getElementById('paymentChart');
   if (!canvas || !state.session) return;
   const totals = sales.reduce((acc, sale) => {
-    acc[sale.payment] = (acc[sale.payment] || 0) + sale.amount;
+    acc[sale.payment] = (acc[sale.payment] || 0) + saleTotal(sale);
     return acc;
   }, {});
   drawBarsOrLine(canvas, Object.entries(totals).map(([label, value]) => ({ label, value })), 'bar');
@@ -624,8 +850,10 @@ function closeModal(id) {
 }
 
 function openSaleModal() {
+  state.saleDraftItems = [];
   openModal('saleModal');
   setSaleStep(0);
+  renderSaleDraft();
 }
 
 function openProductModal(productId) {
@@ -666,6 +894,141 @@ function bindDynamicProductButtons() {
   });
 }
 
+function saleDraftTotals() {
+  const subtotal = state.saleDraftItems.reduce((sum, item) => sum + item.total, 0);
+  const discount = Number(document.getElementById('saleDiscount')?.value || 0);
+  const surcharge = Number(document.getElementById('saleSurcharge')?.value || 0);
+  const total = Math.max(0, subtotal - discount + surcharge);
+  return { subtotal, discount, surcharge, total };
+}
+
+function renderSaleDraft() {
+  const table = document.getElementById('saleItemsTable');
+  const summary = document.getElementById('saleSummary');
+  if (!table || !summary) return;
+  table.innerHTML = state.saleDraftItems.length
+    ? state.saleDraftItems.map((item, index) => `
+      <tr>
+        <td>${byId(products, item.productId)?.name || '-'}</td>
+        <td>${item.quantity}</td>
+        <td>${money(item.unitPrice)}</td>
+        <td>${money(item.total)}</td>
+        <td><button class="secondary-button" data-remove-sale-item="${index}" type="button">Remover</button></td>
+      </tr>
+    `).join('')
+    : '<tr><td colspan="5">Nenhum produto adicionado.</td></tr>';
+  const totals = saleDraftTotals();
+  summary.innerHTML = `
+    <div class="metric-line"><span>Subtotal</span><strong>${money(totals.subtotal)}</strong></div>
+    <div class="metric-line"><span>Desconto</span><strong>${money(totals.discount)}</strong></div>
+    <div class="metric-line"><span>Acrescimos</span><strong>${money(totals.surcharge)}</strong></div>
+    <div class="metric-line total-line"><span>Valor final</span><strong>${money(totals.total)}</strong></div>
+  `;
+  document.querySelectorAll('[data-remove-sale-item]').forEach((button) => {
+    button.onclick = () => {
+      state.saleDraftItems.splice(Number(button.dataset.removeSaleItem), 1);
+      renderSaleDraft();
+    };
+  });
+}
+
+function addSaleItem() {
+  const productId = document.getElementById('productSelect').value;
+  const quantity = Number(document.getElementById('saleQuantity').value || 1);
+  const product = byId(products, productId);
+  if (!product || quantity <= 0) return;
+  const existing = state.saleDraftItems.find((item) => item.productId === productId);
+  if (existing) {
+    existing.quantity += quantity;
+    existing.total = existing.quantity * existing.unitPrice;
+  } else {
+    state.saleDraftItems.push({ productId, quantity, unitPrice: product.salePrice, total: quantity * product.salePrice });
+  }
+  renderSaleDraft();
+}
+
+function applyStockForSale(sale) {
+  if (!['Finalizada', 'Pago'].includes(sale.status)) return;
+  sale.items.forEach((item) => {
+    const product = byId(products, item.productId);
+    if (!product) return;
+    product.stock = Math.max(0, product.stock - item.quantity);
+    inventoryMovements = [{
+      date: sale.date,
+      productId: item.productId,
+      type: 'Saida',
+      quantity: item.quantity,
+      responsible: sale.seller,
+      description: `Venda ${sale.id}`,
+    }, ...inventoryMovements];
+  });
+}
+
+function addFinanceFromSale(sale) {
+  financeMovements = [{
+    id: `f${Date.now()}`,
+    type: isPaidSale(sale) ? 'Entrada' : 'Conta a receber',
+    amount: saleTotal(sale),
+    category: 'Venda',
+    date: sale.date,
+    description: `Venda ${sale.id} - ${saleCustomer(sale).name}`,
+    responsible: sale.seller,
+    payment: sale.payment,
+    receipt: sale.status === 'Finalizada' ? `REC-${sale.id}` : '',
+    status: isPaidSale(sale) ? 'Pago' : 'Pendente',
+  }, ...financeMovements];
+}
+
+function bindHistoryActions() {
+  document.querySelectorAll('[data-sale-details]').forEach((button) => {
+    button.onclick = () => {
+      const sale = sales.find((item) => item.id === button.dataset.saleDetails);
+      if (!sale) return;
+      const items = sale.items.map((item) => `${byId(products, item.productId)?.name || '-'} x${item.quantity}`).join('\n');
+      alert(`Venda ${sale.id}\nCliente: ${saleCustomer(sale).name}\nItens:\n${items}\nTotal: ${money(saleTotal(sale))}\nObs: ${sale.notes || '-'}`);
+    };
+  });
+  document.querySelectorAll('[data-sale-receipt]').forEach((button) => {
+    button.onclick = () => {
+      const sale = sales.find((item) => item.id === button.dataset.saleReceipt);
+      if (!sale) return;
+      const receipt = `${companySettings.companyName}\nComprovante ${sale.id}\nCliente: ${saleCustomer(sale).name}\nTotal: ${money(saleTotal(sale))}\nPagamento: ${sale.payment}\n${companySettings.receiptInfo}`;
+      navigator.clipboard?.writeText(receipt);
+      alert(receipt);
+    };
+  });
+  document.querySelectorAll('[data-sale-cancel]').forEach((button) => {
+    button.onclick = () => {
+      const sale = sales.find((item) => item.id === button.dataset.saleCancel);
+      if (!sale || ['Cancelada', 'Cancelado'].includes(sale.status)) return;
+      sale.status = 'Cancelada';
+      sale.items.forEach((item) => {
+        const product = byId(products, item.productId);
+        if (product) product.stock += item.quantity;
+      });
+      inventoryMovements = [
+        ...sale.items.map((item) => ({ date: new Date().toISOString().slice(0, 10), productId: item.productId, type: 'Devolucao', quantity: item.quantity, responsible: state.session?.name || 'Sistema', description: `Cancelamento ${sale.id}` })),
+        ...inventoryMovements,
+      ];
+      financeMovements = [{ id: `f${Date.now()}`, type: 'Saida', amount: saleTotal(sale), category: 'Cancelamento', date: new Date().toISOString().slice(0, 10), description: `Venda cancelada ${sale.id}`, responsible: state.session?.name || 'Sistema', payment: sale.payment, receipt: '', status: 'Pendente' }, ...financeMovements];
+      saveAll();
+      render();
+    };
+  });
+}
+
+function exportHistoryCsv() {
+  const header = 'numero,data,cliente,vendedor,pagamento,status,total';
+  const rows = filteredHistorySales().map((sale) => [sale.id, sale.date, saleCustomer(sale).name, sale.seller, sale.payment, sale.status, saleTotal(sale)].join(','));
+  const csv = [header, ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'historico-vendas.csv';
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
 function mostFrequent(items) {
   const counts = items.reduce((acc, item) => {
     acc[item] = (acc[item] || 0) + 1;
@@ -684,7 +1047,7 @@ function bindEvents() {
   document.getElementById('loginForm').addEventListener('submit', (event) => {
     event.preventDefault();
     const form = new FormData(event.target);
-    loginUser({ email: form.get('email'), role: form.get('role'), inactive: form.get('inactive') === 'on' });
+    loginUser({ email: form.get('email'), password: form.get('password'), role: form.get('role'), inactive: form.get('inactive') === 'on' });
   });
   document.getElementById('googleLogin').addEventListener('click', () => loginUser({ email: 'google.user@salescontrol.local', role: 'Gerente', provider: 'google' }));
   document.getElementById('signupForm').addEventListener('submit', (event) => {
@@ -717,6 +1080,37 @@ function bindEvents() {
     state.salesStatus = event.target.value;
     renderTables();
   });
+  document.getElementById('historySearch').addEventListener('input', (event) => {
+    state.historySearch = event.target.value;
+    renderHistory();
+  });
+  document.getElementById('historySellerFilter').addEventListener('change', (event) => {
+    state.historySeller = event.target.value;
+    renderHistory();
+  });
+  document.getElementById('historyPaymentFilter').addEventListener('change', (event) => {
+    state.historyPayment = event.target.value;
+    renderHistory();
+  });
+  document.getElementById('historyStatusFilter').addEventListener('change', (event) => {
+    state.historyStatus = event.target.value;
+    renderHistory();
+  });
+  document.getElementById('historyStartDate').addEventListener('change', (event) => {
+    state.historyStartDate = event.target.value;
+    renderHistory();
+  });
+  document.getElementById('historyEndDate').addEventListener('change', (event) => {
+    state.historyEndDate = event.target.value;
+    renderHistory();
+  });
+  document.getElementById('exportHistoryCsv').addEventListener('click', exportHistoryCsv);
+  document.querySelectorAll('[data-report-export]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (button.dataset.reportExport === 'CSV') exportHistoryCsv();
+      else alert(`Exportacao ${button.dataset.reportExport} simulada. Na versao Firebase/backend, o arquivo sera gerado no servidor.`);
+    });
+  });
   document.getElementById('productSearch').addEventListener('input', (event) => {
     state.productSearch = event.target.value;
     renderProducts();
@@ -739,20 +1133,67 @@ function bindEvents() {
   document.getElementById('newSaleButtonAlt').addEventListener('click', openSaleModal);
   document.getElementById('closeModal').addEventListener('click', () => closeModal('saleModal'));
   document.getElementById('saleModal').addEventListener('click', (event) => event.target.id === 'saleModal' && closeModal('saleModal'));
+  document.getElementById('cancelSale').addEventListener('click', () => {
+    state.saleDraftItems = [];
+    document.getElementById('saleForm').reset();
+    closeModal('saleModal');
+  });
   document.getElementById('prevStep').addEventListener('click', () => setSaleStep(state.saleStep - 1));
   document.getElementById('nextStep').addEventListener('click', () => setSaleStep(state.saleStep + 1));
+  document.getElementById('addSaleItem').addEventListener('click', addSaleItem);
+  document.getElementById('saleDiscount').addEventListener('input', renderSaleDraft);
+  document.getElementById('saleSurcharge').addEventListener('input', renderSaleDraft);
   document.querySelectorAll('#stepper button').forEach((button) => button.addEventListener('click', () => setSaleStep(Number(button.dataset.step))));
   document.getElementById('saleForm').addEventListener('submit', (event) => {
     event.preventDefault();
+    if (!state.saleDraftItems.length) {
+      alert('Adicione pelo menos um produto antes de finalizar.');
+      return;
+    }
     const form = new FormData(event.target);
-    const product = products.find((item) => item.id === form.get('product'));
-    sales = [{ date: new Date().toISOString().slice(0, 10), customerId: form.get('customer'), productId: form.get('product'), seller: form.get('seller'), status: 'Pendente', payment: form.get('payment'), amount: Number(form.get('amount')) }, ...sales];
-    if (product) product.stock = Math.max(0, product.stock - 1);
+    const totals = saleDraftTotals();
+    const sale = {
+      id: `S-${String(Date.now()).slice(-6)}`,
+      date: new Date().toISOString().slice(0, 10),
+      customerId: form.get('customer'),
+      productId: state.saleDraftItems[0].productId,
+      items: state.saleDraftItems.map((item) => ({ ...item })),
+      seller: form.get('seller'),
+      status: form.get('status'),
+      payment: form.get('payment'),
+      installments: Number(form.get('installments') || 1),
+      notes: form.get('notes') || '',
+      discount: totals.discount,
+      surcharge: totals.surcharge,
+      subtotal: totals.subtotal,
+      total: totals.total,
+      amount: totals.total,
+    };
+    sales = [sale, ...sales];
+    applyStockForSale(sale);
+    addFinanceFromSale(sale);
     saveAll();
+    state.saleDraftItems = [];
     event.target.reset();
     closeModal('saleModal');
     render();
     switchView('sales');
+  });
+  document.getElementById('stockMovementForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const form = new FormData(event.target);
+    const product = byId(products, form.get('productId'));
+    const quantity = Number(form.get('quantity'));
+    const type = form.get('type');
+    if (product) {
+      if (['Entrada', 'Devolucao'].includes(type)) product.stock += quantity;
+      if (['Saida', 'Perda', 'Danificado'].includes(type)) product.stock = Math.max(0, product.stock - quantity);
+      if (type === 'Ajuste') product.stock = quantity;
+    }
+    inventoryMovements = [{ date: new Date().toISOString().slice(0, 10), productId: form.get('productId'), type, quantity, responsible: form.get('responsible'), description: form.get('description') }, ...inventoryMovements];
+    saveAll();
+    event.target.reset();
+    render();
   });
   document.getElementById('newCustomerButton').addEventListener('click', () => openModal('customerModal'));
   document.getElementById('closeCustomerModal').addEventListener('click', () => closeModal('customerModal'));
@@ -792,6 +1233,42 @@ function bindEvents() {
     saveAll();
     closeModal('productModal');
     render();
+  });
+  document.getElementById('newFinanceButton').addEventListener('click', () => {
+    document.getElementById('financeForm').elements.date.value = new Date().toISOString().slice(0, 10);
+    document.getElementById('financeForm').elements.responsible.value = state.session?.name || 'Administrador';
+    openModal('financeModal');
+  });
+  document.getElementById('closeFinanceModal').addEventListener('click', () => closeModal('financeModal'));
+  document.getElementById('cancelFinance').addEventListener('click', () => closeModal('financeModal'));
+  document.getElementById('financeForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const form = new FormData(event.target);
+    financeMovements = [{ id: `f${Date.now()}`, type: form.get('type'), amount: Number(form.get('amount')), category: form.get('category'), date: form.get('date'), description: form.get('description'), responsible: form.get('responsible'), payment: form.get('payment'), receipt: form.get('receipt'), status: form.get('status') }, ...financeMovements];
+    saveAll();
+    event.target.reset();
+    closeModal('financeModal');
+    render();
+  });
+  document.getElementById('newGoalButton').addEventListener('click', () => openModal('goalModal'));
+  document.getElementById('closeGoalModal').addEventListener('click', () => closeModal('goalModal'));
+  document.getElementById('cancelGoal').addEventListener('click', () => closeModal('goalModal'));
+  document.getElementById('goalForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const form = new FormData(event.target);
+    customGoals = [{ id: `g${Date.now()}`, period: form.get('period'), type: form.get('type'), targetName: form.get('targetName'), targetAmount: Number(form.get('targetAmount')), achievedAmount: 0 }, ...customGoals];
+    saveAll();
+    event.target.reset();
+    closeModal('goalModal');
+    render();
+  });
+  document.getElementById('settingsForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const form = new FormData(event.target);
+    companySettings = Object.fromEntries(form.entries());
+    saveAll();
+    renderSettings();
+    alert('Configuracoes salvas.');
   });
   window.addEventListener('resize', () => {
     drawLineChart();

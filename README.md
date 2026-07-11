@@ -6,6 +6,12 @@ Prototipo funcional de uma plataforma para controlar vendas, clientes, produtos,
 
 Abra `index.html` no navegador. O sistema usa HTML, CSS e JavaScript puro, entao nao precisa instalar dependencias.
 
+Login administrador de teste:
+
+- E-mail: `admin@salescontrol.local`
+- Senha: `admin1234`
+- Perfil: `Administrador`
+
 ## O que ja esta implementado
 
 - Login com e-mail e senha simulado.
@@ -19,6 +25,15 @@ Abra `index.html` no navegador. O sistema usa HTML, CSS e JavaScript puro, entao
 - Dashboard com vendido no dia, vendido no mes, quantidade de vendas, ticket medio, produtos mais vendidos, vendedores com melhor desempenho, metas, estoque baixo, vendas recentes, clientes cadastrados e comparacao com periodo anterior.
 - Graficos de vendas por dia, vendas por mes, formas de pagamento, categorias e evolucao de faturamento.
 - Vendas com filtro por status.
+- Registro de vendas com cliente, multiplos produtos, quantidade, desconto, acrescimos, subtotal, valor final, parcelas, observacoes, finalizacao e cancelamento.
+- Atualizacao automatica de estoque ao finalizar uma venda.
+- Historico de vendas com pesquisa, filtros, detalhes, cancelamento, comprovante e exportacao CSV.
+- Controle de estoque com entrada, saida, ajuste, perda, produto danificado, devolucao, historico e responsavel.
+- Controle financeiro com contas a receber, pendencias, parcelas, fluxo de caixa, despesas, lucro estimado e fechamento parcial.
+- Metas diarias, semanais e mensais por vendedor, equipe, produto ou categoria.
+- Relatorios de vendas, vendedores, produtos, clientes, pagamentos, estoque, lucro, faturamento, descontos e cancelamentos, com exportacao simulada em PDF, Excel e CSV.
+- Notificacoes de estoque baixo, nova venda, meta atingida, pagamento atrasado, parcela proxima, produto sem estoque, venda cancelada e novo cliente.
+- Configuracoes da empresa com CNPJ, contato, logotipo, moeda, formas de pagamento, categorias, regras de desconto e informacoes do comprovante.
 - Cadastro de clientes com CPF/CNPJ, telefone, e-mail, endereco, nascimento, observacoes, historico, status, ultimo contato e resumo individual.
 - Cadastro de produtos com codigo interno, codigo de barras, descricao, categoria, custo, venda, estoque, estoque minimo, imagem, fornecedor, status e data de cadastro.
 - Pesquisa, filtro por categoria, edicao, ativacao/desativacao e entrada/saida de estoque para produtos.

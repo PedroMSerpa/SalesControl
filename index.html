@@ -30,6 +30,7 @@
           <label>Senha
             <input name="password" type="password" placeholder="Digite sua senha" required minlength="6" />
           </label>
+          <small class="muted">Administrador: use a senha padrao <strong>admin1234</strong>.</small>
           <label>Perfil
             <select name="role">
               <option>Administrador</option>
@@ -94,14 +95,23 @@
           <button class="nav-item" data-view="sales" data-permission="sales" title="Vendas">
             <span data-icon="receipt"></span><span>Vendas</span>
           </button>
+          <button class="nav-item" data-view="history" data-permission="sales" title="Historico">
+            <span data-icon="history"></span><span>Historico</span>
+          </button>
           <button class="nav-item" data-view="customers" data-permission="customers" title="Clientes">
             <span data-icon="users"></span><span>Clientes</span>
           </button>
           <button class="nav-item" data-view="products" data-permission="stock" title="Produtos">
             <span data-icon="box"></span><span>Produtos</span>
           </button>
+          <button class="nav-item" data-view="inventory" data-permission="stock" title="Estoque">
+            <span data-icon="packageCheck"></span><span>Estoque</span>
+          </button>
           <button class="nav-item" data-view="payments" data-permission="sales" title="Pagamentos">
             <span data-icon="card"></span><span>Pagamentos</span>
+          </button>
+          <button class="nav-item" data-view="finance" data-permission="reports" title="Financeiro">
+            <span data-icon="wallet"></span><span>Financeiro</span>
           </button>
           <button class="nav-item" data-view="goals" data-permission="reports" title="Metas">
             <span data-icon="target"></span><span>Metas</span>
@@ -111,6 +121,12 @@
           </button>
           <button class="nav-item" data-view="users" data-permission="admin" title="Usuarios">
             <span data-icon="shield"></span><span>Usuarios</span>
+          </button>
+          <button class="nav-item" data-view="notifications" data-permission="all" title="Notificacoes">
+            <span data-icon="bell"></span><span>Notificacoes</span>
+          </button>
+          <button class="nav-item" data-view="settings" data-permission="admin" title="Configuracoes">
+            <span data-icon="settings"></span><span>Configuracoes</span>
           </button>
         </nav>
 
@@ -257,6 +273,43 @@
           </section>
         </section>
 
+        <section class="content-view" id="historyView">
+          <section class="panel wide-panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Historico</p>
+                <h2>Vendas registradas</h2>
+              </div>
+              <div class="inline-controls">
+                <input id="historySearch" type="search" placeholder="Cliente ou numero" />
+                <select id="historySellerFilter" aria-label="Vendedor"></select>
+                <select id="historyPaymentFilter" aria-label="Pagamento"></select>
+                <select id="historyStatusFilter" aria-label="Status"></select>
+                <input id="historyStartDate" type="date" aria-label="Inicio" />
+                <input id="historyEndDate" type="date" aria-label="Fim" />
+                <button class="secondary-button" id="exportHistoryCsv" type="button">CSV</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Numero</th>
+                    <th>Data</th>
+                    <th>Cliente</th>
+                    <th>Vendedor</th>
+                    <th>Pagamento</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Acoes</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTable"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
         <section class="content-view" id="customersView">
           <section class="panel">
             <div class="panel-header">
@@ -292,6 +345,68 @@
           </section>
         </section>
 
+        <section class="content-view" id="inventoryView">
+          <div class="dashboard-grid">
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Estoque</p>
+                  <h2>Registrar movimentacao</h2>
+                </div>
+              </div>
+              <form class="stack-form" id="stockMovementForm">
+                <label>Produto <select name="productId" id="stockProductSelect" required></select></label>
+                <label>Tipo
+                  <select name="type">
+                    <option>Entrada</option>
+                    <option>Saida</option>
+                    <option>Ajuste</option>
+                    <option>Perda</option>
+                    <option>Danificado</option>
+                    <option>Devolucao</option>
+                  </select>
+                </label>
+                <label>Quantidade <input name="quantity" type="number" min="1" step="1" required /></label>
+                <label>Responsavel <input name="responsible" value="Administrador" required /></label>
+                <label>Descricao <input name="description" placeholder="Motivo da movimentacao" /></label>
+                <button class="primary-button" type="submit">Registrar</button>
+              </form>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Alertas</p>
+                  <h2>Situacao do estoque</h2>
+                </div>
+              </div>
+              <div class="notification-list" id="stockAlerts"></div>
+            </section>
+          </div>
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Movimentacoes</p>
+                <h2>Historico de estoque</h2>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Produto</th>
+                    <th>Tipo</th>
+                    <th>Qtd.</th>
+                    <th>Responsavel</th>
+                    <th>Descricao</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryTable"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
         <section class="content-view" id="paymentsView">
           <section class="panel">
             <div class="panel-header">
@@ -304,6 +419,20 @@
           </section>
         </section>
 
+        <section class="content-view" id="financeView">
+          <div class="kpi-grid" id="financeKpis"></div>
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Financeiro</p>
+                <h2>Movimentacoes financeiras</h2>
+              </div>
+              <button class="primary-button" id="newFinanceButton" type="button"><span data-icon="plus"></span><span>Movimento</span></button>
+            </div>
+            <div class="payment-grid" id="financeGrid"></div>
+          </section>
+        </section>
+
         <section class="content-view" id="goalsView">
           <section class="panel">
             <div class="panel-header">
@@ -311,6 +440,7 @@
                 <p class="eyebrow">Metas</p>
                 <h2>Desempenho por vendedor</h2>
               </div>
+              <button class="primary-button" id="newGoalButton" type="button"><span data-icon="plus"></span><span>Meta</span></button>
             </div>
             <div class="goal-board" id="goalBoard"></div>
           </section>
@@ -343,6 +473,11 @@
                 <p class="eyebrow">Resumo</p>
                 <h2>Indicadores de gestao</h2>
               </div>
+              <div class="inline-controls">
+                <button class="secondary-button" data-report-export="PDF" type="button">PDF</button>
+                <button class="secondary-button" data-report-export="Excel" type="button">Excel</button>
+                <button class="secondary-button" data-report-export="CSV" type="button">CSV</button>
+              </div>
             </div>
             <div class="report-list columns" id="reportList"></div>
           </section>
@@ -359,6 +494,45 @@
             <div class="user-grid" id="userGrid"></div>
           </section>
         </section>
+
+        <section class="content-view" id="notificationsView">
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Central</p>
+                <h2>Notificacoes operacionais</h2>
+              </div>
+            </div>
+            <div class="notification-list" id="notificationList"></div>
+          </section>
+        </section>
+
+        <section class="content-view" id="settingsView">
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Empresa</p>
+                <h2>Configuracoes da empresa</h2>
+              </div>
+            </div>
+            <form class="stack-form two-columns" id="settingsForm">
+              <label>Nome da empresa <input name="companyName" required /></label>
+              <label>CNPJ <input name="cnpj" required /></label>
+              <label>Endereco <input name="address" required /></label>
+              <label>Telefone <input name="phone" required /></label>
+              <label>E-mail <input name="email" type="email" required /></label>
+              <label>Logotipo <input name="logo" placeholder="URL ou caminho no Storage" /></label>
+              <label>Moeda <input name="currency" required /></label>
+              <label>Formas aceitas <input name="paymentMethods" required /></label>
+              <label>Categorias <input name="categories" required /></label>
+              <label>Regra de desconto <input name="discountRules" required /></label>
+              <label class="full-line">Informacoes do comprovante <input name="receiptInfo" required /></label>
+              <div class="modal-actions full-line">
+                <button class="primary-button" type="submit">Salvar configuracoes</button>
+              </div>
+            </form>
+          </section>
+        </section>
       </main>
     </div>
 
@@ -373,33 +547,141 @@
         </div>
         <div class="stepper" id="stepper">
           <button class="active" data-step="0">Cliente</button>
-          <button data-step="1">Produto</button>
+          <button data-step="1">Itens</button>
           <button data-step="2">Pagamento</button>
         </div>
         <form id="saleForm">
           <div class="form-step active" data-step-panel="0">
             <label>Cliente <select name="customer" id="customerSelect" required></select></label>
             <label>Contato <input name="contact" required placeholder="email ou telefone" /></label>
+            <label>Observacoes <input name="notes" placeholder="Observacoes da venda" /></label>
           </div>
           <div class="form-step" data-step-panel="1">
-            <label>Produto <select name="product" id="productSelect" required></select></label>
+            <label>Produto <select name="product" id="productSelect"></select></label>
+            <label>Quantidade <input name="quantity" id="saleQuantity" type="number" min="1" step="1" value="1" /></label>
+            <button class="secondary-button" id="addSaleItem" type="button">Adicionar produto</button>
+            <div class="table-wrap compact-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Qtd.</th>
+                    <th>Valor</th>
+                    <th>Total</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="saleItemsTable"></tbody>
+              </table>
+            </div>
+            <label>Desconto <input name="discount" id="saleDiscount" type="number" min="0" step="0.01" value="0" /></label>
+            <label>Acrescimos <input name="surcharge" id="saleSurcharge" type="number" min="0" step="0.01" value="0" /></label>
             <label>Vendedor <select name="seller" id="sellerSelect" required></select></label>
           </div>
           <div class="form-step" data-step-panel="2">
             <label>Forma de pagamento
               <select name="payment" required>
                 <option>Pix</option>
+                <option>Dinheiro</option>
                 <option>Cartao de credito</option>
+                <option>Cartao de debito</option>
                 <option>Boleto</option>
                 <option>Transferencia</option>
+                <option>Pagamento parcelado</option>
+                <option>Pagamento misto</option>
               </select>
             </label>
-            <label>Valor <input name="amount" type="number" min="1" step="0.01" required placeholder="0,00" /></label>
+            <label>Parcelas <input name="installments" type="number" min="1" step="1" value="1" /></label>
+            <label>Status
+              <select name="status">
+                <option>Finalizada</option>
+                <option>Pendente</option>
+                <option>Parcialmente paga</option>
+                <option>Em andamento</option>
+              </select>
+            </label>
+            <div class="sale-summary" id="saleSummary"></div>
           </div>
           <div class="modal-actions">
+            <button class="secondary-button" type="button" id="cancelSale">Cancelar venda</button>
             <button class="secondary-button" type="button" id="prevStep">Voltar</button>
             <button class="secondary-button" type="button" id="nextStep">Avancar</button>
-            <button class="primary-button hidden" type="submit" id="saveSale">Salvar venda</button>
+            <button class="primary-button hidden" type="submit" id="saveSale">Finalizar venda</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="financeModal" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="financeModalTitle">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Caixa</p>
+            <h2 id="financeModalTitle">Novo movimento</h2>
+          </div>
+          <button class="icon-button" id="closeFinanceModal" aria-label="Fechar"><span data-icon="x"></span></button>
+        </div>
+        <form class="stack-form" id="financeForm">
+          <label>Tipo
+            <select name="type">
+              <option>Entrada</option>
+              <option>Saida</option>
+              <option>Despesa</option>
+              <option>Conta a receber</option>
+            </select>
+          </label>
+          <label>Valor <input name="amount" type="number" min="0" step="0.01" required /></label>
+          <label>Categoria <input name="category" required /></label>
+          <label>Data <input name="date" type="date" required /></label>
+          <label>Descricao <input name="description" required /></label>
+          <label>Responsavel <input name="responsible" required /></label>
+          <label>Forma de pagamento <input name="payment" required /></label>
+          <label>Comprovante <input name="receipt" placeholder="URL ou referencia" /></label>
+          <label>Status
+            <select name="status">
+              <option>Pago</option>
+              <option>Pendente</option>
+              <option>Atrasado</option>
+            </select>
+          </label>
+          <div class="modal-actions">
+            <button class="secondary-button" type="button" id="cancelFinance">Cancelar</button>
+            <button class="primary-button" type="submit">Salvar movimento</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="goalModal" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="goalModalTitle">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Metas</p>
+            <h2 id="goalModalTitle">Nova meta</h2>
+          </div>
+          <button class="icon-button" id="closeGoalModal" aria-label="Fechar"><span data-icon="x"></span></button>
+        </div>
+        <form class="stack-form" id="goalForm">
+          <label>Periodo
+            <select name="period">
+              <option>Diaria</option>
+              <option>Semanal</option>
+              <option>Mensal</option>
+            </select>
+          </label>
+          <label>Tipo
+            <select name="type">
+              <option>Por vendedor</option>
+              <option>Por equipe</option>
+              <option>Por produto</option>
+              <option>Por categoria</option>
+            </select>
+          </label>
+          <label>Responsavel/Alvo <input name="targetName" required /></label>
+          <label>Valor da meta <input name="targetAmount" type="number" min="1" step="0.01" required /></label>
+          <div class="modal-actions">
+            <button class="secondary-button" type="button" id="cancelGoal">Cancelar</button>
+            <button class="primary-button" type="submit">Salvar meta</button>
           </div>
         </form>
       </div>
