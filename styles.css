@@ -636,6 +636,10 @@ label select {
     var(--bg);
 }
 
+.auth-screen.hidden {
+  display: none;
+}
+
 .auth-brand {
   display: grid;
   gap: 22px;
