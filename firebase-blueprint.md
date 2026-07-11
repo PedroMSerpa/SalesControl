@@ -5,15 +5,14 @@
 Perfis sugeridos:
 
 - `admin`: acesso total ao sistema.
-- `manager`: vendas, clientes, produtos, metas e relatorios.
-- `seller`: vendas, clientes vinculados e metas individuais.
-- `finance`: pagamentos, comprovantes e relatorios financeiros.
+- `seller`: loja, produtos, categorias e estoque da propria loja.
+- `customer`: loja, carrinho, checkout, perfil e pedidos do cliente.
 
 Claims recomendadas:
 
 ```json
 {
-  "role": "manager",
+  "role": "seller",
   "sellerId": "user_123",
   "active": true
 }
@@ -23,7 +22,7 @@ Claims recomendadas:
 
 Colecoes principais:
 
-- `users`: nome, email, role, status, sellerId, createdAt.
+- `users`: nome, email, role, status, sellerId, customerId, createdAt.
 - `customers`: nome, contato, documento, endereco, responsavelId, status, createdAt.
 - `products`: nome, categoria, preco, estoqueAtual, estoqueMinimo, imagePath, active.
 - `sales`: customerId, sellerId, items, subtotal, desconto, total, status, paymentStatus, createdAt.
@@ -55,6 +54,7 @@ Diretrizes:
 
 - Exigir usuario autenticado em todas as colecoes.
 - Bloquear usuarios com `active = false`.
-- Permitir que vendedores leiam apenas clientes, vendas e metas vinculadas a eles.
-- Permitir escrita financeira apenas para `admin`, `manager` ou `finance`.
+- Permitir que vendedores gerenciem apenas produtos, categorias e estoque vinculados a eles.
+- Permitir que clientes leiam apenas seus pedidos, perfil, carrinho e checkout.
+- Permitir escrita financeira administrativa apenas para `admin`.
 - Validar campos sensiveis no servidor com Cloud Functions quando houver impacto financeiro ou estoque.

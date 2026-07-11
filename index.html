@@ -30,13 +30,12 @@
           <label>Senha
             <input name="password" type="password" value="admin1234" placeholder="Digite sua senha" required minlength="6" />
           </label>
-          <small class="muted">Administrador: use a senha padrao <strong>admin1234</strong>.</small>
+          <small class="muted">Demos: admin/admin1234, vendedor/vendedor123, cliente/cliente123.</small>
           <label>Perfil
             <select name="role">
               <option>Administrador</option>
-              <option>Gerente</option>
               <option>Vendedor</option>
-              <option>Estoquista</option>
+              <option>Cliente</option>
             </select>
           </label>
           <label class="check-row">
@@ -58,8 +57,7 @@
           <label>Perfil inicial
             <select name="role">
               <option>Vendedor</option>
-              <option>Estoquista</option>
-              <option>Gerente</option>
+              <option>Cliente</option>
             </select>
           </label>
           <button class="primary-button" type="submit"><span data-icon="userPlus"></span><span>Cadastrar usuario</span></button>
@@ -89,46 +87,46 @@
         </div>
 
         <nav class="nav-list" aria-label="Menu principal">
-          <button class="nav-item active" data-view="dashboard" data-permission="all" title="Dashboard">
+          <button class="nav-item active" data-view="dashboard" data-permission="admin" title="Dashboard">
             <span data-icon="layout"></span><span>Dashboard</span>
           </button>
-          <button class="nav-item" data-view="shop" data-permission="all" title="Loja">
+          <button class="nav-item" data-view="shop" data-permission="shop" title="Loja">
             <span data-icon="store"></span><span>Loja</span>
           </button>
-          <button class="nav-item" data-view="sales" data-permission="sales" title="Vendas">
+          <button class="nav-item" data-view="sales" data-permission="admin" title="Vendas">
             <span data-icon="receipt"></span><span>Vendas</span>
           </button>
-          <button class="nav-item" data-view="history" data-permission="sales" title="Historico">
+          <button class="nav-item" data-view="history" data-permission="admin" title="Historico">
             <span data-icon="history"></span><span>Historico</span>
           </button>
-          <button class="nav-item" data-view="customers" data-permission="customers" title="Clientes">
+          <button class="nav-item" data-view="customers" data-permission="admin" title="Clientes">
             <span data-icon="users"></span><span>Clientes</span>
           </button>
-          <button class="nav-item" data-view="products" data-permission="stock" title="Produtos">
+          <button class="nav-item" data-view="products" data-permission="catalog" title="Produtos">
             <span data-icon="box"></span><span>Produtos</span>
           </button>
-          <button class="nav-item" data-view="categories" data-permission="reports" title="Categorias">
+          <button class="nav-item" data-view="categories" data-permission="catalog" title="Categorias">
             <span data-icon="layers"></span><span>Categorias</span>
           </button>
-          <button class="nav-item" data-view="inventory" data-permission="stock" title="Estoque">
+          <button class="nav-item" data-view="inventory" data-permission="catalog" title="Estoque">
             <span data-icon="packageCheck"></span><span>Estoque</span>
           </button>
-          <button class="nav-item" data-view="payments" data-permission="sales" title="Pagamentos">
+          <button class="nav-item" data-view="payments" data-permission="admin" title="Pagamentos">
             <span data-icon="card"></span><span>Pagamentos</span>
           </button>
-          <button class="nav-item" data-view="finance" data-permission="reports" title="Financeiro">
+          <button class="nav-item" data-view="finance" data-permission="admin" title="Financeiro">
             <span data-icon="wallet"></span><span>Financeiro</span>
           </button>
-          <button class="nav-item" data-view="goals" data-permission="reports" title="Metas">
+          <button class="nav-item" data-view="goals" data-permission="admin" title="Metas">
             <span data-icon="target"></span><span>Metas</span>
           </button>
-          <button class="nav-item" data-view="reports" data-permission="reports" title="Relatorios">
+          <button class="nav-item" data-view="reports" data-permission="admin" title="Relatorios">
             <span data-icon="chart"></span><span>Relatorios</span>
           </button>
           <button class="nav-item" data-view="users" data-permission="admin" title="Usuarios">
             <span data-icon="shield"></span><span>Usuarios</span>
           </button>
-          <button class="nav-item" data-view="notifications" data-permission="all" title="Notificacoes">
+          <button class="nav-item" data-view="notifications" data-permission="admin" title="Notificacoes">
             <span data-icon="bell"></span><span>Notificacoes</span>
           </button>
           <button class="nav-item" data-view="settings" data-permission="admin" title="Configuracoes">

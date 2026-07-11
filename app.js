@@ -38,12 +38,11 @@ const defaultProducts = [
 ];
 
 const defaultUsers = [
-  { name: 'Ana Martins', email: 'admin@salescontrol.local', role: 'Administrador', status: 'Ativo', target: 90000, achieved: 78200 },
-  { name: 'Bruno Costa', email: 'bruno@salescontrol.local', role: 'Vendedor', status: 'Ativo', target: 70000, achieved: 48600 },
-  { name: 'Camila Rocha', email: 'camila@salescontrol.local', role: 'Vendedor', status: 'Ativo', target: 65000, achieved: 60250 },
-  { name: 'Diego Alves', email: 'diego@salescontrol.local', role: 'Estoquista', status: 'Ativo', target: 0, achieved: 0 },
-  { name: 'Marina Lopes', email: 'marina@salescontrol.local', role: 'Gerente', status: 'Ativo', target: 0, achieved: 0 },
-  { name: 'Usuario Inativo', email: 'inativo@salescontrol.local', role: 'Vendedor', status: 'Inativo', target: 0, achieved: 0 },
+  { name: 'Ana Martins', email: 'admin@salescontrol.local', password: 'admin1234', role: 'Administrador', status: 'Ativo', target: 90000, achieved: 78200 },
+  { name: 'Bruno Costa', email: 'bruno@salescontrol.local', password: 'vendedor123', role: 'Vendedor', status: 'Ativo', target: 70000, achieved: 48600 },
+  { name: 'Camila Rocha', email: 'camila@salescontrol.local', password: 'vendedor123', role: 'Vendedor', status: 'Ativo', target: 65000, achieved: 60250 },
+  { name: 'Cliente Demo', email: 'cliente@salescontrol.local', password: 'cliente123', role: 'Cliente', status: 'Ativo', target: 0, achieved: 0 },
+  { name: 'Usuario Inativo', email: 'inativo@salescontrol.local', password: 'vendedor123', role: 'Vendedor', status: 'Inativo', target: 0, achieved: 0 },
 ];
 
 const defaultCustomers = [
@@ -105,10 +104,9 @@ const defaultCategories = [
 ];
 
 const permissions = {
-  Administrador: ['all', 'sales', 'customers', 'stock', 'reports', 'admin'],
-  Gerente: ['all', 'sales', 'customers', 'reports'],
-  Vendedor: ['all', 'sales', 'customers'],
-  Estoquista: ['all', 'stock'],
+  Administrador: ['admin', 'shop', 'catalog'],
+  Vendedor: ['shop', 'catalog'],
+  Cliente: ['shop'],
 };
 
 const state = {
@@ -146,7 +144,18 @@ const state = {
 
 let products = JSON.parse(localStorage.getItem('sales-control-products') || 'null') || defaultProducts;
 let customers = JSON.parse(localStorage.getItem('sales-control-customers') || 'null') || defaultCustomers;
-let users = JSON.parse(localStorage.getItem('sales-control-users') || 'null') || defaultUsers;
+let users = (JSON.parse(localStorage.getItem('sales-control-users') || 'null') || defaultUsers)
+  .filter((user) => ['Administrador', 'Vendedor', 'Cliente'].includes(user.role));
+defaultUsers.forEach((defaultUser) => {
+  const existingUser = users.find((user) => user.email === defaultUser.email);
+  if (existingUser) {
+    existingUser.password = existingUser.password || defaultUser.password;
+    existingUser.role = defaultUser.role;
+    existingUser.status = defaultUser.status;
+  } else {
+    users.push(defaultUser);
+  }
+});
 let sales = normalizeSales(JSON.parse(localStorage.getItem('sales-control-sales') || 'null') || defaultSales);
 let inventoryMovements = JSON.parse(localStorage.getItem('sales-control-inventory') || 'null') || defaultInventoryMovements;
 let financeMovements = JSON.parse(localStorage.getItem('sales-control-finance') || 'null') || defaultFinanceMovements;
@@ -251,32 +260,60 @@ function applySession() {
   document.getElementById('authScreen').classList.toggle('hidden', hasSession);
   document.getElementById('appShell').classList.toggle('locked', !hasSession);
   if (!hasSession) return;
+  if (!permissions[state.session.role]) {
+    localStorage.removeItem('sales-control-session');
+    state.session = null;
+    document.getElementById('authScreen').classList.remove('hidden');
+    document.getElementById('appShell').classList.add('locked');
+    document.getElementById('loginFeedback').textContent = 'Perfil antigo removido. Entre como Administrador, Vendedor ou Cliente.';
+    return;
+  }
 
   document.getElementById('sessionChip').innerHTML = `<strong>${state.session.name}</strong><span>${state.session.role}</span>`;
   document.querySelectorAll('[data-permission]').forEach((button) => {
-    const allowed = button.dataset.permission === 'all' || can(button.dataset.permission);
+    const allowed = can(button.dataset.permission);
     button.classList.toggle('hidden', !allowed);
   });
+  document.getElementById('newSaleButton').classList.toggle('hidden', !can('admin'));
+  document.getElementById('globalSearch').placeholder = state.session.role === 'Cliente' ? 'Pesquisar produtos na loja' : 'Pesquisar vendas, clientes ou produtos';
   if (document.querySelector(`.nav-item[data-view="${state.view}"]`)?.classList.contains('hidden')) {
-    switchView('dashboard');
+    switchView(can('admin') ? 'dashboard' : 'shop');
   }
 }
 
 function loginUser({ email, password = '', role, inactive = false, provider = 'email' }) {
   const existing = users.find((user) => user.email.toLowerCase() === email.toLowerCase());
-  const user = existing || { name: email.split('@')[0], email, role, status: 'Ativo', target: 0, achieved: 0 };
-  if (provider === 'email' && (role || user.role) === 'Administrador' && password !== 'admin1234') {
-    document.getElementById('loginFeedback').textContent = 'Senha incorreta para Administrador. Use admin1234.';
+  const user = existing || (provider === 'google' ? { name: email.split('@')[0], email, role: 'Cliente', status: 'Ativo', target: 0, achieved: 0 } : null);
+  if (!user) {
+    document.getElementById('loginFeedback').textContent = 'Usuario nao encontrado. Use o cadastro ou uma conta demo.';
+    return;
+  }
+  if (provider === 'email' && role && user.role !== role) {
+    document.getElementById('loginFeedback').textContent = `Este e-mail pertence ao perfil ${user.role}. Selecione o perfil correto.`;
+    return;
+  }
+  if (provider === 'email' && password !== user.password) {
+    document.getElementById('loginFeedback').textContent = 'Senha incorreta para este perfil.';
     return;
   }
   if (inactive || user.status === 'Inativo') {
     document.getElementById('loginFeedback').textContent = 'Usuario inativo. Procure um administrador para reativar o acesso.';
     return;
   }
-  state.session = { name: user.name, email: user.email, role: role || user.role, provider, startedAt: new Date().toISOString() };
+  state.session = { name: user.name, email: user.email, role: user.role, provider, startedAt: new Date().toISOString() };
+  if (state.session.role === 'Cliente') {
+    state.clientSession = {
+      name: user.name,
+      cpf: '000.000.000-00',
+      email: user.email,
+      phone: '',
+      provider,
+    };
+  }
   localStorage.setItem('sales-control-session', JSON.stringify(state.session));
   document.getElementById('loginFeedback').textContent = '';
   applySession();
+  if (state.session.role !== 'Administrador') switchView('shop');
   render();
 }
 
@@ -559,13 +596,14 @@ function renderCustomers() {
 
 function filteredProducts() {
   return products.filter((product) => {
+    const ownerScope = state.session?.role === 'Vendedor' ? !product.ownerEmail || product.ownerEmail === state.session.email : true;
     const matchesStock = state.stockFilter === 'all' || (state.stockFilter === 'low' ? product.stock <= product.minStock : product.stock > product.minStock);
     const matchesSearch = [product.name, product.internalCode, product.barcode, product.supplier]
       .join(' ')
       .toLowerCase()
       .includes(state.productSearch.trim().toLowerCase());
     const matchesCategory = state.categoryFilter === 'Todas' || product.category === state.categoryFilter;
-    return matchesStock && matchesSearch && matchesCategory;
+    return ownerScope && matchesStock && matchesSearch && matchesCategory;
   });
 }
 
@@ -1506,16 +1544,27 @@ function formatDate(date) {
 
 function bindEvents() {
   document.querySelectorAll('[data-auth-tab]').forEach((button) => button.addEventListener('click', () => showAuthTab(button.dataset.authTab)));
+  document.getElementById('loginForm').elements.role.addEventListener('change', (event) => {
+    const demos = {
+      Administrador: ['admin@salescontrol.local', 'admin1234'],
+      Vendedor: ['bruno@salescontrol.local', 'vendedor123'],
+      Cliente: ['cliente@salescontrol.local', 'cliente123'],
+    };
+    const [email, password] = demos[event.target.value];
+    document.getElementById('loginForm').elements.email.value = email;
+    document.getElementById('loginForm').elements.password.value = password;
+  });
   document.getElementById('loginForm').addEventListener('submit', (event) => {
     event.preventDefault();
     const form = new FormData(event.target);
     loginUser({ email: form.get('email'), password: form.get('password'), role: form.get('role'), inactive: form.get('inactive') === 'on' });
   });
-  document.getElementById('googleLogin').addEventListener('click', () => loginUser({ email: 'google.user@salescontrol.local', role: 'Gerente', provider: 'google' }));
+  document.getElementById('googleLogin').addEventListener('click', () => loginUser({ email: 'cliente.google@salescontrol.local', role: 'Cliente', provider: 'google' }));
   document.getElementById('signupForm').addEventListener('submit', (event) => {
     event.preventDefault();
     const form = new FormData(event.target);
-    const user = { name: form.get('name'), email: form.get('email'), role: form.get('role'), status: 'Ativo', target: 0, achieved: 0 };
+    const requestedRole = ['Vendedor', 'Cliente'].includes(form.get('role')) ? form.get('role') : 'Cliente';
+    const user = { name: form.get('name'), email: form.get('email'), password: requestedRole === 'Vendedor' ? 'vendedor123' : 'cliente123', role: requestedRole, status: 'Ativo', target: 0, achieved: 0 };
     users = [user, ...users.filter((item) => item.email !== user.email)];
     saveAll();
     document.getElementById('signupFeedback').textContent = 'Usuario cadastrado. Use a aba Login para entrar.';
@@ -1535,7 +1584,13 @@ function bindEvents() {
   document.querySelectorAll('.nav-item, [data-view-target]').forEach((node) => node.addEventListener('click', () => switchView(node.dataset.view || node.dataset.viewTarget)));
   document.getElementById('globalSearch').addEventListener('input', (event) => {
     state.search = event.target.value;
-    renderTables();
+    if (state.view === 'shop' || state.session?.role === 'Cliente') {
+      state.shopSearch = event.target.value;
+      document.getElementById('shopSearch').value = event.target.value;
+      renderShop();
+    } else {
+      renderTables();
+    }
   });
   document.getElementById('chartMetric').addEventListener('change', drawLineChart);
   document.getElementById('salesStatusFilter').addEventListener('change', (event) => {
@@ -1788,6 +1843,7 @@ function bindEvents() {
       image: form.get('image'),
       supplier: form.get('supplier'),
       active: form.get('active') === 'true',
+      ownerEmail: products.find((item) => item.id === form.get('id'))?.ownerEmail || (state.session?.role === 'Vendedor' ? state.session.email : ''),
       createdAt: products.find((item) => item.id === form.get('id'))?.createdAt || new Date().toISOString().slice(0, 10),
     };
     products = [product, ...products.filter((item) => item.id !== product.id)];
