@@ -12,6 +12,18 @@ Login administrador de teste:
 - Senha: `admin1234`
 - Perfil: `Administrador`
 
+Login vendedor de teste:
+
+- E-mail: `bruno@salescontrol.local`
+- Senha: `vendedor123`
+- Perfil: `Vendedor`
+
+Login cliente de teste:
+
+- E-mail: `cliente@salescontrol.local`
+- Senha: `cliente123`
+- Perfil: `Cliente`
+
 ## O que ja esta implementado
 
 - Login com e-mail e senha simulado.
@@ -19,7 +31,10 @@ Login administrador de teste:
 - Cadastro de usuarios.
 - Recuperacao de senha simulada.
 - Logout, controle de sessao local e bloqueio de usuario inativo.
-- Perfis de acesso: Administrador, Gerente, Vendedor e Estoquista.
+- Perfis de acesso: Administrador, Vendedor e Cliente.
+- Administrador tem acesso completo ao sistema.
+- Vendedor acessa a loja, produtos, categorias e estoque para alimentar sua propria loja.
+- Cliente acessa apenas a loja, carrinho, checkout e area de pedidos/perfil do cliente.
 - Menu lateral recolhivel.
 - Cabecalho com pesquisa global, notificacoes e acao de nova venda.
 - Dashboard com vendido no dia, vendido no mes, quantidade de vendas, ticket medio, produtos mais vendidos, vendedores com melhor desempenho, metas, estoque baixo, vendas recentes, clientes cadastrados e comparacao com periodo anterior.
@@ -36,7 +51,7 @@ Login administrador de teste:
 - Configuracoes da empresa com CNPJ, contato, logotipo, moeda, formas de pagamento, categorias, regras de desconto e informacoes do comprovante.
 - Area de loja para cliente com busca, categorias, banner, produtos em destaque, mais vendidos, ofertas, lancamentos, recomendados, recentes, frete gratis, cupons e beneficios.
 - Busca de produtos por nome, categoria, marca, codigo, palavra-chave e descricao, com sugestoes automaticas.
-- Painel de categorias para administrador e gerente com categoria, subcategoria, marca, colecao, departamento, imagem, ordem, status e termos relacionados.
+- Painel de categorias para administrador e vendedor com categoria, subcategoria, marca, colecao, departamento, imagem, ordem, status e termos relacionados.
 - Listagem de loja com imagem, preco original/promocional, desconto, parcelas, avaliacao, frete, prazo, destaque e disponibilidade.
 - Detalhe de produto com galeria, codigo, avaliacao, quantidade vendida, preco, pagamento, estoque, variacoes, garantia, devolucao, perguntas, avaliacoes e semelhantes.
 - Carrinho com quantidade, remocao, salvar para depois, cupom, frete, subtotal, desconto e total.
