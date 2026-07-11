@@ -8,14 +8,28 @@ Abra `index.html` no navegador. O sistema usa HTML, CSS e JavaScript puro, entao
 
 ## O que ja esta implementado
 
+- Login com e-mail e senha simulado.
+- Login com Google simulado.
+- Cadastro de usuarios.
+- Recuperacao de senha simulada.
+- Logout, controle de sessao local e bloqueio de usuario inativo.
+- Perfis de acesso: Administrador, Gerente, Vendedor e Estoquista.
 - Menu lateral recolhivel.
 - Cabecalho com pesquisa global, notificacoes e acao de nova venda.
-- Dashboard com indicadores, grafico e vendas recentes.
+- Dashboard com vendido no dia, vendido no mes, quantidade de vendas, ticket medio, produtos mais vendidos, vendedores com melhor desempenho, metas, estoque baixo, vendas recentes, clientes cadastrados e comparacao com periodo anterior.
+- Graficos de vendas por dia, vendas por mes, formas de pagamento, categorias e evolucao de faturamento.
 - Vendas com filtro por status.
+- Cadastro de clientes com CPF/CNPJ, telefone, e-mail, endereco, nascimento, observacoes, historico, status, ultimo contato e resumo individual.
+- Cadastro de produtos com codigo interno, codigo de barras, descricao, categoria, custo, venda, estoque, estoque minimo, imagem, fornecedor, status e data de cadastro.
+- Pesquisa, filtro por categoria, edicao, ativacao/desativacao e entrada/saida de estoque para produtos.
 - Clientes, produtos, pagamentos, metas, relatorios e usuarios.
 - Formulario modal em etapas para cadastrar venda.
 - Modo claro e modo escuro.
 - Persistencia local das novas vendas via `localStorage`.
+
+## Seguranca do repositorio publico
+
+Este prototipo nao inclui chaves, service accounts, arquivos `.env` ou configuracoes privadas do Firebase. O `.gitignore` bloqueia credenciais comuns como `.env`, `serviceAccountKey.json`, `firebase-adminsdk*.json`, `google-services.json` e `GoogleService-Info.plist`.
 
 ## Proximos passos para Firebase
 
