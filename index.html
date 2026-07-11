@@ -92,6 +92,9 @@
           <button class="nav-item active" data-view="dashboard" data-permission="all" title="Dashboard">
             <span data-icon="layout"></span><span>Dashboard</span>
           </button>
+          <button class="nav-item" data-view="shop" data-permission="all" title="Loja">
+            <span data-icon="store"></span><span>Loja</span>
+          </button>
           <button class="nav-item" data-view="sales" data-permission="sales" title="Vendas">
             <span data-icon="receipt"></span><span>Vendas</span>
           </button>
@@ -103,6 +106,9 @@
           </button>
           <button class="nav-item" data-view="products" data-permission="stock" title="Produtos">
             <span data-icon="box"></span><span>Produtos</span>
+          </button>
+          <button class="nav-item" data-view="categories" data-permission="reports" title="Categorias">
+            <span data-icon="layers"></span><span>Categorias</span>
           </button>
           <button class="nav-item" data-view="inventory" data-permission="stock" title="Estoque">
             <span data-icon="packageCheck"></span><span>Estoque</span>
@@ -242,6 +248,178 @@
           </section>
         </section>
 
+        <section class="content-view" id="shopView">
+          <section class="shop-header">
+            <div class="shop-topbar">
+              <div class="shop-logo">
+                <span class="brand-mark small">SC</span>
+                <strong id="shopCompanyName">SalesControl Demo</strong>
+              </div>
+              <label class="shop-search">
+                <span data-icon="search"></span>
+                <input id="shopSearch" type="search" placeholder="Buscar por produto, categoria, marca, codigo ou palavra-chave" list="shopSuggestions" />
+                <datalist id="shopSuggestions"></datalist>
+              </label>
+              <button class="secondary-button" id="deliveryAddressButton" type="button"><span data-icon="map"></span><span>Entrega</span></button>
+              <button class="secondary-button" id="clientLoginButton" type="button"><span data-icon="users"></span><span>Cliente</span></button>
+              <button class="secondary-button" id="favoritesButton" type="button"><span data-icon="heart"></span><span>Favoritos</span></button>
+              <button class="primary-button" id="cartButton" type="button"><span data-icon="cart"></span><span id="cartCount">Carrinho</span></button>
+            </div>
+            <div class="shop-nav">
+              <button data-shop-jump="shopCategories">Categorias</button>
+              <button data-shop-jump="dailyOffers">Ofertas</button>
+              <button data-shop-jump="ordersArea">Meus pedidos</button>
+              <button data-shop-jump="benefitsArea">Cupons</button>
+            </div>
+            <div class="promo-banner">
+              <div>
+                <p class="eyebrow">Promocao da semana</p>
+                <h2>Produtos com condicoes especiais e pagamento facilitado</h2>
+                <span>Pix, cartao, boleto, parcelado e pagamento misto.</span>
+              </div>
+              <button class="primary-button" data-shop-jump="dailyOffers" type="button">Ver ofertas</button>
+            </div>
+          </section>
+
+          <section class="panel" id="shopCategories">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Catalogo</p>
+                <h2>Categorias de produtos</h2>
+              </div>
+            </div>
+            <div class="category-strip" id="shopCategoryStrip"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Resultados</p>
+                <h2>Listagem de produtos</h2>
+              </div>
+              <div class="inline-controls">
+                <select id="shopCategoryFilter" aria-label="Categoria"></select>
+                <select id="shopBrandFilter" aria-label="Marca"></select>
+                <select id="shopRatingFilter" aria-label="Avaliacao">
+                  <option value="0">Todas avaliacoes</option>
+                  <option value="4">4+ estrelas</option>
+                  <option value="4.5">4,5+ estrelas</option>
+                </select>
+                <select id="shopShippingFilter" aria-label="Frete">
+                  <option value="all">Todos os fretes</option>
+                  <option value="free">Frete gratis</option>
+                </select>
+                <select id="shopPromoFilter" aria-label="Promocao">
+                  <option value="all">Todos</option>
+                  <option value="promo">Em promocao</option>
+                  <option value="available">Disponiveis</option>
+                </select>
+                <select id="shopSort" aria-label="Ordenacao">
+                  <option value="relevant">Mais relevantes</option>
+                  <option value="lower">Menor preco</option>
+                  <option value="higher">Maior preco</option>
+                  <option value="sold">Mais vendidos</option>
+                  <option value="rated">Melhor avaliados</option>
+                  <option value="recent">Mais recentes</option>
+                  <option value="discount">Maior desconto</option>
+                </select>
+              </div>
+            </div>
+            <div class="shop-product-grid" id="shopProductGrid"></div>
+          </section>
+
+          <div class="dashboard-grid">
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Destaques</p>
+                  <h2>Produtos em destaque</h2>
+                </div>
+              </div>
+              <div class="mini-product-list" id="featuredProducts"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Ranking</p>
+                  <h2>Produtos mais vendidos</h2>
+                </div>
+              </div>
+              <div class="mini-product-list" id="shopBestSellers"></div>
+            </section>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="panel" id="dailyOffers">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Hoje</p>
+                  <h2>Ofertas do dia e frete gratis</h2>
+                </div>
+              </div>
+              <div class="mini-product-list" id="dailyOfferProducts"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Novidades</p>
+                  <h2>Lancamentos e recomendados</h2>
+                </div>
+              </div>
+              <div class="mini-product-list" id="recommendedProducts"></div>
+            </section>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Recentes</p>
+                  <h2>Visualizados recentemente</h2>
+                </div>
+              </div>
+              <div class="mini-product-list" id="recentlyViewedProducts"></div>
+            </section>
+            <section class="panel" id="benefitsArea">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Beneficios</p>
+                  <h2>Pagamentos, cupons e vantagens</h2>
+                </div>
+              </div>
+              <div class="benefit-grid">
+                <article><strong>Pix com desconto</strong><span>Validacao imediata e baixa no financeiro.</span></article>
+                <article><strong>Cupom BEMVINDO10</strong><span>10% de desconto no carrinho.</span></article>
+                <article><strong>Frete gratis</strong><span>Produtos marcados entram na campanha.</span></article>
+                <article><strong>Pagamento parcelado</strong><span>Simulacao de parcelas no checkout.</span></article>
+              </div>
+            </section>
+          </div>
+
+          <section class="panel" id="ordersArea">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Cliente</p>
+                <h2>Meus pedidos</h2>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pedido</th>
+                    <th>Data</th>
+                    <th>Cliente</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="clientOrdersTable"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
         <section class="content-view" id="salesView">
           <section class="panel wide-panel">
             <div class="panel-header">
@@ -343,6 +521,46 @@
             </div>
             <div class="product-grid" id="productGrid"></div>
           </section>
+        </section>
+
+        <section class="content-view" id="categoriesView">
+          <div class="dashboard-grid">
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Administrativo</p>
+                  <h2>Categorias da loja</h2>
+                </div>
+              </div>
+              <form class="stack-form" id="categoryForm">
+                <input type="hidden" name="id" />
+                <label>Categoria <input name="name" required placeholder="Eletronicos" /></label>
+                <label>Subcategoria <input name="subcategory" required placeholder="Notebooks" /></label>
+                <label>Marca <input name="brand" required placeholder="Lenovo" /></label>
+                <label>Colecao <input name="collection" placeholder="Linha 2026" /></label>
+                <label>Departamento <input name="department" required placeholder="Computadores" /></label>
+                <label>Imagem <input name="image" placeholder="URL da imagem" /></label>
+                <label>Ordem <input name="order" type="number" min="1" step="1" value="1" /></label>
+                <label>Status
+                  <select name="active">
+                    <option value="true">Ativa</option>
+                    <option value="false">Inativa</option>
+                  </select>
+                </label>
+                <label>Termos relacionados <input name="keywords" placeholder="not, notebook gamer, 16gb" /></label>
+                <button class="primary-button" type="submit">Salvar categoria</button>
+              </form>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Hierarquia</p>
+                  <h2>Departamentos e subcategorias</h2>
+                </div>
+              </div>
+              <div class="category-admin-list" id="categoryAdminList"></div>
+            </section>
+          </div>
         </section>
 
         <section class="content-view" id="inventoryView">
@@ -682,6 +900,148 @@
           <div class="modal-actions">
             <button class="secondary-button" type="button" id="cancelGoal">Cancelar</button>
             <button class="primary-button" type="submit">Salvar meta</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="productDetailModal" aria-hidden="true">
+      <div class="modal large-modal product-detail-modal" role="dialog" aria-modal="true" aria-labelledby="productDetailTitle">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Produto</p>
+            <h2 id="productDetailTitle">Detalhes do produto</h2>
+          </div>
+          <button class="icon-button" id="closeProductDetailModal" aria-label="Fechar"><span data-icon="x"></span></button>
+        </div>
+        <div id="productDetailContent"></div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="cartModal" aria-hidden="true">
+      <div class="modal large-modal" role="dialog" aria-modal="true" aria-labelledby="cartModalTitle">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Compras</p>
+            <h2 id="cartModalTitle">Carrinho e checkout</h2>
+          </div>
+          <button class="icon-button" id="closeCartModal" aria-label="Fechar"><span data-icon="x"></span></button>
+        </div>
+        <div class="stepper shop-stepper" id="checkoutStepper">
+          <button class="active" data-checkout-step="0">Carrinho</button>
+          <button data-checkout-step="1">Identificacao</button>
+          <button data-checkout-step="2">Endereco</button>
+          <button data-checkout-step="3">Entrega</button>
+          <button data-checkout-step="4">Pagamento</button>
+          <button data-checkout-step="5">Confirmacao</button>
+        </div>
+        <div class="checkout-step active" data-checkout-panel="0">
+          <div class="table-wrap compact-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Qtd.</th>
+                  <th>Preco</th>
+                  <th>Total</th>
+                  <th>Acoes</th>
+                </tr>
+              </thead>
+              <tbody id="cartItemsTable"></tbody>
+            </table>
+          </div>
+          <div class="inline-controls checkout-controls">
+            <input id="couponCode" placeholder="Cupom" />
+            <button class="secondary-button" id="applyCoupon" type="button">Aplicar</button>
+            <input id="shippingZip" placeholder="CEP" />
+            <button class="secondary-button" id="calculateShipping" type="button">Calcular entrega</button>
+          </div>
+          <div class="sale-summary" id="cartSummary"></div>
+        </div>
+        <div class="checkout-step" data-checkout-panel="1">
+          <form class="stack-form two-columns" id="clientCheckoutForm">
+            <label>Nome <input name="name" required /></label>
+            <label>CPF <input name="cpf" required /></label>
+            <label>E-mail <input name="email" type="email" required /></label>
+            <label>Telefone <input name="phone" required /></label>
+            <label>Senha <input name="password" type="password" required /></label>
+            <label>Data de nascimento <input name="birthDate" type="date" /></label>
+          </form>
+          <div class="benefit-grid">
+            <article><strong>Entrar com Google</strong><span>Simulado para futura ligacao com Firebase Authentication.</span></article>
+            <article><strong>Codigo por e-mail</strong><span>Fluxo preparado para validacao por codigo.</span></article>
+            <article><strong>Codigo por telefone</strong><span>Opcional para implementacao posterior.</span></article>
+          </div>
+        </div>
+        <div class="checkout-step" data-checkout-panel="2">
+          <form class="stack-form two-columns" id="checkoutAddressForm">
+            <label>Endereco <input name="address" required /></label>
+            <label>Numero <input name="number" required /></label>
+            <label>Bairro <input name="district" required /></label>
+            <label>Cidade <input name="city" required /></label>
+            <label>UF <input name="state" required maxlength="2" /></label>
+            <label>Principal
+              <select name="primary">
+                <option>Sim</option>
+                <option>Nao</option>
+              </select>
+            </label>
+          </form>
+        </div>
+        <div class="checkout-step" data-checkout-panel="3">
+          <div class="shipping-options" id="shippingOptions">
+            <button class="active" data-shipping="Padrao" data-cost="18">Entrega padrao</button>
+            <button data-shipping="Expressa" data-cost="38">Entrega expressa</button>
+            <button data-shipping="Retirada" data-cost="0">Retirada no local</button>
+            <button data-shipping="Gratis" data-cost="0">Frete gratis</button>
+          </div>
+        </div>
+        <div class="checkout-step" data-checkout-panel="4">
+          <form class="stack-form two-columns" id="checkoutPaymentForm">
+            <label>Forma de pagamento
+              <select name="payment">
+                <option>Pix</option>
+                <option>Cartao de credito</option>
+                <option>Cartao de debito</option>
+                <option>Boleto</option>
+                <option>Saldo</option>
+                <option>Cupom</option>
+                <option>Pagamento parcelado</option>
+              </select>
+            </label>
+            <label>Parcelas <input name="installments" type="number" min="1" step="1" value="1" /></label>
+          </form>
+        </div>
+        <div class="checkout-step" data-checkout-panel="5">
+          <div class="sale-summary" id="checkoutConfirmation"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="secondary-button" type="button" id="prevCheckoutStep">Voltar</button>
+          <button class="secondary-button" type="button" id="nextCheckoutStep">Avancar</button>
+          <button class="primary-button hidden" type="button" id="finishCheckout">Concluir compra</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="clientAuthModal" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="clientAuthTitle">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Cliente</p>
+            <h2 id="clientAuthTitle">Login e cadastro</h2>
+          </div>
+          <button class="icon-button" id="closeClientAuthModal" aria-label="Fechar"><span data-icon="x"></span></button>
+        </div>
+        <form class="stack-form" id="clientAuthForm">
+          <label>Nome <input name="name" value="Cliente Demo" required /></label>
+          <label>CPF <input name="cpf" value="000.000.000-00" required /></label>
+          <label>E-mail <input name="email" type="email" value="cliente@salescontrol.local" required /></label>
+          <label>Telefone <input name="phone" value="(11) 90000-0000" required /></label>
+          <label>Senha <input name="password" type="password" value="cliente123" required /></label>
+          <label>Data de nascimento <input name="birthDate" type="date" /></label>
+          <div class="modal-actions">
+            <button class="secondary-button" id="clientGoogleLogin" type="button">Entrar com Google</button>
+            <button class="primary-button" type="submit">Entrar ou cadastrar</button>
           </div>
         </form>
       </div>

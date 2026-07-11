@@ -21,6 +21,11 @@ const icons = {
   packageCheck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m21 8-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="m9 16 2 2 4-5"/></svg>',
   wallet: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7H5a2 2 0 0 1 0-4h13"/><path d="M5 7h16v14H5a2 2 0 0 1-2-2V5"/><path d="M16 14h.01"/></svg>',
   settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5z"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1A2 2 0 1 1 7.1 4l.1.1a1.7 1.7 0 0 0 1.9.3h.1a1.7 1.7 0 0 0 1-1.6V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6h.1a1.7 1.7 0 0 0 1.9-.3l.1-.1A2 2 0 1 1 20 7.1l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.6 1h.1a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.8 1z"/></svg>',
+  store: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 10h16l-1-6H5l-1 6z"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>',
+  layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m12 2 9 5-9 5-9-5 9-5z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></svg>',
+  map: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18 3 21V6l6-3 6 3 6-3v15l-6 3-6-3z"/><path d="M9 3v15M15 6v15"/></svg>',
+  heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
+  cart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>',
 };
 
 const defaultProducts = [
@@ -93,6 +98,12 @@ const defaultCustomGoals = [
   { id: 'g1', period: 'Mensal', type: 'Por equipe', targetName: 'Equipe comercial', targetAmount: 50000, achievedAmount: 37500 },
 ];
 
+const defaultCategories = [
+  { id: 'cat1', name: 'Software', subcategory: 'Gestao', brand: 'SalesCloud Labs', collection: 'Suite Pro', department: 'Sistemas', image: '', order: 1, active: true, keywords: 'crm, gestao, vendas, estoque' },
+  { id: 'cat2', name: 'Equipamento', subcategory: 'Operacao', brand: 'Norte Tech', collection: 'Hardware Comercial', department: 'Eletronicos', image: '', order: 2, active: true, keywords: 'scanner, pos, terminal, fiscal' },
+  { id: 'cat3', name: 'Servico', subcategory: 'Consultoria', brand: 'Equipe interna', collection: 'Implantacao', department: 'Servicos', image: '', order: 3, active: true, keywords: 'treinamento, onboarding, implantacao' },
+];
+
 const permissions = {
   Administrador: ['all', 'sales', 'customers', 'stock', 'reports', 'admin'],
   Gerente: ['all', 'sales', 'customers', 'reports'],
@@ -115,6 +126,21 @@ const state = {
   historyStartDate: '',
   historyEndDate: '',
   saleDraftItems: [],
+  shopSearch: '',
+  shopCategory: 'Todas',
+  shopBrand: 'Todas',
+  shopRating: 0,
+  shopShipping: 'all',
+  shopPromo: 'all',
+  shopSort: 'relevant',
+  checkoutStep: 0,
+  shippingMethod: 'Padrao',
+  shippingCost: 18,
+  coupon: '',
+  cart: JSON.parse(localStorage.getItem('sales-control-cart') || '[]'),
+  savedForLater: JSON.parse(localStorage.getItem('sales-control-saved-cart') || '[]'),
+  recentViews: JSON.parse(localStorage.getItem('sales-control-recent-views') || '[]'),
+  clientSession: JSON.parse(localStorage.getItem('sales-control-client-session') || 'null'),
   session: JSON.parse(localStorage.getItem('sales-control-session') || 'null'),
 };
 
@@ -126,6 +152,7 @@ let inventoryMovements = JSON.parse(localStorage.getItem('sales-control-inventor
 let financeMovements = JSON.parse(localStorage.getItem('sales-control-finance') || 'null') || defaultFinanceMovements;
 let companySettings = JSON.parse(localStorage.getItem('sales-control-settings') || 'null') || defaultCompanySettings;
 let customGoals = JSON.parse(localStorage.getItem('sales-control-goals') || 'null') || defaultCustomGoals;
+let categories = JSON.parse(localStorage.getItem('sales-control-categories') || 'null') || defaultCategories;
 
 function normalizeSales(rows) {
   return rows.map((sale, index) => {
@@ -201,6 +228,11 @@ function saveAll() {
   localStorage.setItem('sales-control-finance', JSON.stringify(financeMovements));
   localStorage.setItem('sales-control-settings', JSON.stringify(companySettings));
   localStorage.setItem('sales-control-goals', JSON.stringify(customGoals));
+  localStorage.setItem('sales-control-categories', JSON.stringify(categories));
+  localStorage.setItem('sales-control-cart', JSON.stringify(state.cart));
+  localStorage.setItem('sales-control-saved-cart', JSON.stringify(state.savedForLater));
+  localStorage.setItem('sales-control-recent-views', JSON.stringify(state.recentViews));
+  localStorage.setItem('sales-control-client-session', JSON.stringify(state.clientSession));
 }
 
 function renderIcons() {
@@ -254,6 +286,69 @@ function saleTotal(sale) {
 
 function isPaidSale(sale) {
   return ['Pago', 'Finalizada'].includes(sale.status);
+}
+
+function shopMeta(product) {
+  const category = categories.find((item) => item.name === product.category) || categories[0];
+  const sold = productSales(product.id).reduce((sum, sale) => sum + sale.items.filter((item) => item.productId === product.id).reduce((qty, item) => qty + item.quantity, 0), 0);
+  const discountPercent = product.id.charCodeAt(product.id.length - 1) % 3 === 0 ? 15 : product.id.charCodeAt(product.id.length - 1) % 2 === 0 ? 10 : 0;
+  const originalPrice = Math.round(product.salePrice * (discountPercent ? 1 + discountPercent / 100 : 1));
+  const promoPrice = discountPercent ? product.salePrice : originalPrice;
+  return {
+    brand: product.brand || category.brand || product.supplier,
+    subcategory: product.subcategory || category.subcategory,
+    collection: product.collection || category.collection,
+    department: product.department || category.department,
+    keywords: [product.name, product.category, product.internalCode, product.barcode, product.description, product.supplier, category.keywords].join(' ').toLowerCase(),
+    originalPrice,
+    promoPrice,
+    discountPercent,
+    installments: Math.max(1, Math.min(12, Math.ceil(promoPrice / 250))),
+    rating: Number(product.rating || (4 + (product.id.charCodeAt(product.id.length - 1) % 9) / 10).toFixed(1)),
+    sold,
+    freeShipping: product.freeShipping ?? product.stock > product.minStock + 8,
+    deliveryDays: product.freeShipping ? 3 : 5,
+    featured: product.featured ?? product.stock > product.minStock,
+    condition: product.condition || 'Novo',
+    variations: product.variations || [
+      { name: 'Padrao', stock: product.stock },
+      { name: 'Premium', stock: Math.max(0, Math.floor(product.stock / 3)) },
+    ],
+  };
+}
+
+function cartTotals() {
+  const subtotal = state.cart.reduce((sum, item) => {
+    const product = byId(products, item.productId);
+    return product ? sum + shopMeta(product).promoPrice * item.quantity : sum;
+  }, 0);
+  const discount = state.coupon.toUpperCase() === 'BEMVINDO10' ? subtotal * 0.1 : 0;
+  const shipping = state.cart.some((item) => shopMeta(byId(products, item.productId)).freeShipping) ? 0 : state.shippingCost;
+  return { subtotal, discount, shipping, total: Math.max(0, subtotal - discount + shipping) };
+}
+
+function filteredShopProducts() {
+  const query = state.shopSearch.trim().toLowerCase();
+  const rows = products.filter((product) => {
+    const meta = shopMeta(product);
+    const matchesQuery = !query || meta.keywords.includes(query);
+    const matchesCategory = state.shopCategory === 'Todas' || product.category === state.shopCategory;
+    const matchesBrand = state.shopBrand === 'Todas' || meta.brand === state.shopBrand;
+    const matchesRating = meta.rating >= Number(state.shopRating || 0);
+    const matchesShipping = state.shopShipping === 'all' || meta.freeShipping;
+    const matchesPromo = state.shopPromo === 'all' || (state.shopPromo === 'promo' ? meta.discountPercent > 0 : product.stock > 0);
+    return product.active && matchesQuery && matchesCategory && matchesBrand && matchesRating && matchesShipping && matchesPromo;
+  });
+  const sorters = {
+    lower: (a, b) => shopMeta(a).promoPrice - shopMeta(b).promoPrice,
+    higher: (a, b) => shopMeta(b).promoPrice - shopMeta(a).promoPrice,
+    sold: (a, b) => shopMeta(b).sold - shopMeta(a).sold,
+    rated: (a, b) => shopMeta(b).rating - shopMeta(a).rating,
+    recent: (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+    discount: (a, b) => shopMeta(b).discountPercent - shopMeta(a).discountPercent,
+    relevant: (a, b) => Number(shopMeta(b).featured) - Number(shopMeta(a).featured),
+  };
+  return rows.sort(sorters[state.shopSort] || sorters.relevant);
 }
 
 function logoutUser() {
@@ -654,6 +749,175 @@ function renderSettings() {
   });
 }
 
+function renderShop() {
+  document.getElementById('shopCompanyName').textContent = companySettings.companyName;
+  document.getElementById('cartCount').textContent = `Carrinho (${state.cart.reduce((sum, item) => sum + item.quantity, 0)})`;
+  renderShopSuggestions();
+  renderShopFilters();
+  renderShopCategories();
+  renderShopProductGrid();
+  renderShopSections();
+  renderClientOrders();
+  renderCart();
+}
+
+function renderShopSuggestions() {
+  const suggestions = new Set();
+  products.forEach((product) => {
+    const meta = shopMeta(product);
+    [product.name, product.category, meta.brand, product.internalCode, product.barcode, ...meta.keywords.split(',')].forEach((term) => {
+      if (term && term.trim()) suggestions.add(term.trim());
+    });
+  });
+  ['Notebook', 'Notebook gamer', 'Notebook Lenovo', 'Notebook com 16 GB de RAM'].forEach((term) => suggestions.add(term));
+  document.getElementById('shopSuggestions').innerHTML = [...suggestions].slice(0, 40).map((term) => `<option value="${term}"></option>`).join('');
+}
+
+function renderShopFilters() {
+  const brands = ['Todas', ...new Set(products.map((product) => shopMeta(product).brand))];
+  document.getElementById('shopCategoryFilter').innerHTML = ['Todas', ...new Set(products.map((product) => product.category))].map((category) => `<option ${category === state.shopCategory ? 'selected' : ''}>${category}</option>`).join('');
+  document.getElementById('shopBrandFilter').innerHTML = brands.map((brand) => `<option ${brand === state.shopBrand ? 'selected' : ''}>${brand}</option>`).join('');
+}
+
+function renderShopCategories() {
+  document.getElementById('shopCategoryStrip').innerHTML = categories
+    .filter((category) => category.active)
+    .sort((a, b) => Number(a.order) - Number(b.order))
+    .map((category) => `
+      <button class="category-pill ${state.shopCategory === category.name ? 'active' : ''}" data-shop-category="${category.name}">
+        <strong>${category.name}</strong>
+        <span>${category.department} / ${category.subcategory}</span>
+      </button>
+    `).join('');
+}
+
+function renderShopProductGrid() {
+  document.getElementById('shopProductGrid').innerHTML = filteredShopProducts().map(shopProductCard).join('');
+}
+
+function shopProductCard(product) {
+  const meta = shopMeta(product);
+  return `
+    <article class="shop-product-card">
+      <div class="product-image">${product.image ? `<img src="${product.image}" alt="${product.name}" />` : `<span>${product.category.slice(0, 2).toUpperCase()}</span>`}</div>
+      <div class="card-head">
+        <strong>${product.name}</strong>
+        ${meta.featured ? '<span class="status ok">Destaque</span>' : ''}
+      </div>
+      <span class="muted">${meta.brand} | ${product.internalCode}</span>
+      <div class="rating-line">★ ${meta.rating} | ${meta.sold} vendidos</div>
+      <div class="price-line">
+        ${meta.discountPercent ? `<span>${money(meta.originalPrice)}</span>` : ''}
+        <strong>${money(meta.promoPrice)}</strong>
+      </div>
+      <span class="muted">${meta.installments}x de ${money(meta.promoPrice / meta.installments)} | ${meta.freeShipping ? 'Frete gratis' : `Entrega em ${meta.deliveryDays} dias`}</span>
+      <div class="metric-line"><span>Disponibilidade</span><strong>${product.stock > 0 ? `${product.stock} un.` : 'Esgotado'}</strong></div>
+      <div class="card-actions">
+        <button class="secondary-button" data-product-detail="${product.id}" type="button">Detalhes</button>
+        <button class="secondary-button" data-save-later="${product.id}" type="button">Favorito</button>
+        <button class="primary-button" data-add-cart="${product.id}" type="button">Comprar</button>
+      </div>
+    </article>
+  `;
+}
+
+function miniProductRow(product) {
+  const meta = shopMeta(product);
+  return `
+    <button class="mini-product-row" data-product-detail="${product.id}" type="button">
+      <span>${product.name}</span>
+      <strong>${money(meta.promoPrice)}</strong>
+    </button>
+  `;
+}
+
+function renderShopSections() {
+  const active = products.filter((product) => product.active);
+  document.getElementById('featuredProducts').innerHTML = active.filter((product) => shopMeta(product).featured).slice(0, 5).map(miniProductRow).join('');
+  document.getElementById('shopBestSellers').innerHTML = [...active].sort((a, b) => shopMeta(b).sold - shopMeta(a).sold).slice(0, 5).map(miniProductRow).join('');
+  document.getElementById('dailyOfferProducts').innerHTML = active.filter((product) => shopMeta(product).discountPercent || shopMeta(product).freeShipping).slice(0, 5).map(miniProductRow).join('');
+  document.getElementById('recommendedProducts').innerHTML = [...active].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5).map(miniProductRow).join('');
+  document.getElementById('recentlyViewedProducts').innerHTML = state.recentViews.map((id) => byId(products, id)).filter(Boolean).slice(0, 5).map(miniProductRow).join('') || '<span class="muted">Nenhum produto visualizado ainda.</span>';
+  bindShopProductActions();
+}
+
+function renderClientOrders() {
+  const email = state.clientSession?.email;
+  const rows = sales.filter((sale) => !email || saleCustomer(sale).email === email).slice(0, 8);
+  document.getElementById('clientOrdersTable').innerHTML = rows.map((sale) => `
+    <tr>
+      <td>${sale.id}</td>
+      <td>${formatDate(sale.date)}</td>
+      <td>${saleCustomer(sale).name}</td>
+      <td><span class="status ${statusClass(sale.status)}">${sale.status}</span></td>
+      <td>${money(saleTotal(sale))}</td>
+    </tr>
+  `).join('');
+}
+
+function renderCategoryAdmin() {
+  document.getElementById('categoryAdminList').innerHTML = categories
+    .sort((a, b) => Number(a.order) - Number(b.order))
+    .map((category) => `
+      <article class="category-admin-card">
+        <div class="card-head"><strong>${category.name}</strong><span class="status ${category.active ? 'ok' : 'cancelled'}">${category.active ? 'Ativa' : 'Inativa'}</span></div>
+        <span class="muted">${category.department} > ${category.subcategory} | ${category.brand}</span>
+        <div class="metric-line"><span>Colecao</span><strong>${category.collection || '-'}</strong></div>
+        <div class="metric-line"><span>Ordem</span><strong>${category.order}</strong></div>
+        <small class="muted">${category.keywords}</small>
+        <div class="card-actions">
+          <button class="secondary-button" data-edit-category="${category.id}" type="button">Editar</button>
+          <button class="secondary-button" data-toggle-category="${category.id}" type="button">${category.active ? 'Desativar' : 'Ativar'}</button>
+        </div>
+      </article>
+    `).join('');
+  bindCategoryActions();
+}
+
+function renderCart() {
+  const rows = state.cart.map((item) => {
+    const product = byId(products, item.productId);
+    if (!product) return '';
+    const meta = shopMeta(product);
+    return `
+      <tr>
+        <td>${product.name}</td>
+        <td><input class="cart-qty" data-cart-qty="${product.id}" type="number" min="1" value="${item.quantity}" /></td>
+        <td>${money(meta.promoPrice)}</td>
+        <td>${money(meta.promoPrice * item.quantity)}</td>
+        <td class="table-actions">
+          <button class="secondary-button" data-save-cart="${product.id}" type="button">Salvar</button>
+          <button class="secondary-button" data-remove-cart="${product.id}" type="button">Remover</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+  document.getElementById('cartItemsTable').innerHTML = rows || '<tr><td colspan="5">Carrinho vazio.</td></tr>';
+  const totals = cartTotals();
+  document.getElementById('cartSummary').innerHTML = `
+    <div class="metric-line"><span>Subtotal</span><strong>${money(totals.subtotal)}</strong></div>
+    <div class="metric-line"><span>Desconto</span><strong>${money(totals.discount)}</strong></div>
+    <div class="metric-line"><span>Frete</span><strong>${money(totals.shipping)}</strong></div>
+    <div class="metric-line total-line"><span>Total</span><strong>${money(totals.total)}</strong></div>
+  `;
+  renderCheckoutConfirmation();
+  bindCartActions();
+}
+
+function renderCheckoutConfirmation() {
+  const totals = cartTotals();
+  const clientName = state.clientSession?.name || document.getElementById('clientCheckoutForm')?.elements.name?.value || 'Cliente visitante';
+  const payment = document.getElementById('checkoutPaymentForm')?.elements.payment?.value || 'Pix';
+  document.getElementById('checkoutConfirmation').innerHTML = `
+    <div class="metric-line"><span>Cliente</span><strong>${clientName}</strong></div>
+    <div class="metric-line"><span>Produtos</span><strong>${state.cart.reduce((sum, item) => sum + item.quantity, 0)} item(ns)</strong></div>
+    <div class="metric-line"><span>Entrega</span><strong>${state.shippingMethod}</strong></div>
+    <div class="metric-line"><span>Pagamento</span><strong>${payment}</strong></div>
+    <div class="metric-line"><span>Descontos</span><strong>${money(totals.discount)}</strong></div>
+    <div class="metric-line total-line"><span>Total</span><strong>${money(totals.total)}</strong></div>
+  `;
+}
+
 function renderReports() {
   const total = sales.reduce((sum, sale) => sum + saleTotal(sale), 0);
   const paid = paidTotal(sales);
@@ -700,6 +964,8 @@ function render() {
   renderUsers();
   renderReports();
   renderNotifications();
+  renderShop();
+  renderCategoryAdmin();
   renderSelects();
   renderSettings();
   renderSaleDraft();
@@ -1029,6 +1295,202 @@ function exportHistoryCsv() {
   URL.revokeObjectURL(link.href);
 }
 
+function bindShopProductActions() {
+  document.querySelectorAll('[data-product-detail]').forEach((button) => {
+    button.onclick = () => openProductDetail(button.dataset.productDetail);
+  });
+  document.querySelectorAll('[data-add-cart]').forEach((button) => {
+    button.onclick = () => addToCart(button.dataset.addCart);
+  });
+  document.querySelectorAll('[data-save-later]').forEach((button) => {
+    button.onclick = () => {
+      if (!state.savedForLater.includes(button.dataset.saveLater)) state.savedForLater.push(button.dataset.saveLater);
+      saveAll();
+      alert('Produto salvo em favoritos.');
+    };
+  });
+  document.querySelectorAll('[data-shop-category]').forEach((button) => {
+    button.onclick = () => {
+      state.shopCategory = button.dataset.shopCategory;
+      renderShop();
+    };
+  });
+}
+
+function openProductDetail(productId) {
+  const product = byId(products, productId);
+  if (!product) return;
+  const meta = shopMeta(product);
+  state.recentViews = [productId, ...state.recentViews.filter((id) => id !== productId)].slice(0, 8);
+  document.getElementById('productDetailTitle').textContent = product.name;
+  document.getElementById('productDetailContent').innerHTML = `
+    <div class="product-detail-layout">
+      <div class="product-gallery">
+        <div class="product-image large">${product.image ? `<img src="${product.image}" alt="${product.name}" />` : `<span>${product.category.slice(0, 2).toUpperCase()}</span>`}</div>
+        <div class="gallery-thumbs"><span>Imagem 1</span><span>Imagem 2</span><span>Video opcional</span></div>
+      </div>
+      <div class="product-detail-info">
+        <span class="muted">${meta.brand} | Codigo ${product.internalCode} | ${product.barcode}</span>
+        <div class="rating-line">★ ${meta.rating} | ${meta.sold} vendidos | ${product.stock} disponiveis</div>
+        <div class="price-line detail-price">${meta.discountPercent ? `<span>${money(meta.originalPrice)}</span>` : ''}<strong>${money(meta.promoPrice)}</strong></div>
+        <span class="status ${product.stock > 0 ? 'ok' : 'low'}">${product.stock > 0 ? 'Disponivel' : 'Sem estoque'}</span>
+        <div class="metric-line"><span>Parcelamento</span><strong>${meta.installments}x de ${money(meta.promoPrice / meta.installments)}</strong></div>
+        <div class="metric-line"><span>Entrega</span><strong>${meta.freeShipping ? 'Frete gratis' : `${meta.deliveryDays} dias uteis`}</strong></div>
+        <div class="metric-line"><span>Garantia</span><strong>12 meses</strong></div>
+        <div class="metric-line"><span>Devolucao</span><strong>7 dias</strong></div>
+        <div class="variation-grid">${meta.variations.map((variation) => `<span>${variation.name}: ${variation.stock} un.</span>`).join('')}</div>
+        <p>${product.description}</p>
+        <div class="benefit-grid">
+          <article><strong>Caracteristicas</strong><span>${meta.department}, ${meta.subcategory}, ${meta.collection}</span></article>
+          <article><strong>Perguntas e respostas</strong><span>3 perguntas respondidas pela equipe comercial.</span></article>
+          <article><strong>Avaliacoes</strong><span>Compradores destacam custo-beneficio e suporte.</span></article>
+          <article><strong>Semelhantes</strong><span>${products.filter((item) => item.category === product.category && item.id !== product.id).slice(0, 2).map((item) => item.name).join(', ') || '-'}</span></article>
+        </div>
+        <button class="primary-button" data-add-cart="${product.id}" type="button">Adicionar ao carrinho</button>
+      </div>
+    </div>
+  `;
+  openModal('productDetailModal');
+  saveAll();
+  renderShopSections();
+  bindShopProductActions();
+}
+
+function addToCart(productId, quantity = 1) {
+  const product = byId(products, productId);
+  if (!product || product.stock <= 0) {
+    alert('Produto sem estoque.');
+    return;
+  }
+  const existing = state.cart.find((item) => item.productId === productId);
+  if (existing) existing.quantity = Math.min(product.stock, existing.quantity + quantity);
+  else state.cart.push({ productId, quantity });
+  saveAll();
+  renderShop();
+  alert('Produto adicionado ao carrinho.');
+}
+
+function bindCartActions() {
+  document.querySelectorAll('[data-cart-qty]').forEach((input) => {
+    input.onchange = () => {
+      const product = byId(products, input.dataset.cartQty);
+      const item = state.cart.find((row) => row.productId === input.dataset.cartQty);
+      if (item && product) item.quantity = Math.max(1, Math.min(product.stock, Number(input.value || 1)));
+      saveAll();
+      renderCart();
+      renderShop();
+    };
+  });
+  document.querySelectorAll('[data-remove-cart]').forEach((button) => {
+    button.onclick = () => {
+      state.cart = state.cart.filter((item) => item.productId !== button.dataset.removeCart);
+      saveAll();
+      renderCart();
+      renderShop();
+    };
+  });
+  document.querySelectorAll('[data-save-cart]').forEach((button) => {
+    button.onclick = () => {
+      if (!state.savedForLater.includes(button.dataset.saveCart)) state.savedForLater.push(button.dataset.saveCart);
+      state.cart = state.cart.filter((item) => item.productId !== button.dataset.saveCart);
+      saveAll();
+      renderCart();
+      renderShop();
+    };
+  });
+}
+
+function setCheckoutStep(step) {
+  state.checkoutStep = Math.max(0, Math.min(5, step));
+  document.querySelectorAll('[data-checkout-panel]').forEach((panel) => panel.classList.toggle('active', Number(panel.dataset.checkoutPanel) === state.checkoutStep));
+  document.querySelectorAll('[data-checkout-step]').forEach((button) => button.classList.toggle('active', Number(button.dataset.checkoutStep) === state.checkoutStep));
+  document.getElementById('prevCheckoutStep').disabled = state.checkoutStep === 0;
+  document.getElementById('nextCheckoutStep').classList.toggle('hidden', state.checkoutStep === 5);
+  document.getElementById('finishCheckout').classList.toggle('hidden', state.checkoutStep !== 5);
+  renderCheckoutConfirmation();
+}
+
+function finishCheckout() {
+  if (!state.cart.length) {
+    alert('Carrinho vazio.');
+    return;
+  }
+  const unavailable = state.cart.find((item) => {
+    const product = byId(products, item.productId);
+    return !product || product.stock < item.quantity;
+  });
+  if (unavailable) {
+    alert('Estoque insuficiente em um dos produtos. Revise o carrinho.');
+    return;
+  }
+  const clientForm = new FormData(document.getElementById('clientCheckoutForm'));
+  const paymentForm = new FormData(document.getElementById('checkoutPaymentForm'));
+  const addressForm = new FormData(document.getElementById('checkoutAddressForm'));
+  const client = state.clientSession || {
+    name: clientForm.get('name') || 'Cliente Loja',
+    cpf: clientForm.get('cpf') || '000.000.000-00',
+    email: clientForm.get('email') || `cliente${Date.now()}@salescontrol.local`,
+    phone: clientForm.get('phone') || '',
+    birthDate: clientForm.get('birthDate') || '',
+  };
+  state.clientSession = client;
+  let customer = customers.find((item) => item.email === client.email);
+  if (!customer) {
+    customer = { id: `c${Date.now()}`, name: client.name, document: client.cpf, phone: client.phone, email: client.email, address: `${addressForm.get('address') || 'Endereco nao informado'}, ${addressForm.get('number') || ''}`, birthDate: client.birthDate, notes: 'Cliente cadastrado pela loja', status: 'Ativo', lastContact: new Date().toISOString().slice(0, 10) };
+    customers = [customer, ...customers];
+  }
+  const totals = cartTotals();
+  const items = state.cart.map((item) => {
+    const product = byId(products, item.productId);
+    return { productId: item.productId, quantity: item.quantity, unitPrice: shopMeta(product).promoPrice, total: shopMeta(product).promoPrice * item.quantity };
+  });
+  const sale = {
+    id: `WEB-${String(Date.now()).slice(-6)}`,
+    date: new Date().toISOString().slice(0, 10),
+    customerId: customer.id,
+    productId: items[0].productId,
+    items,
+    seller: state.session?.role === 'Vendedor' ? state.session.name : 'Loja Online',
+    status: 'Finalizada',
+    payment: paymentForm.get('payment'),
+    installments: Number(paymentForm.get('installments') || 1),
+    notes: `Checkout loja | Entrega: ${state.shippingMethod}`,
+    discount: totals.discount,
+    surcharge: totals.shipping,
+    subtotal: totals.subtotal,
+    total: totals.total,
+    amount: totals.total,
+  };
+  sales = [sale, ...sales];
+  applyStockForSale(sale);
+  addFinanceFromSale(sale);
+  state.cart = [];
+  saveAll();
+  closeModal('cartModal');
+  render();
+  alert(`Compra ${sale.id} concluida.`);
+}
+
+function bindCategoryActions() {
+  document.querySelectorAll('[data-edit-category]').forEach((button) => {
+    button.onclick = () => {
+      const category = categories.find((item) => item.id === button.dataset.editCategory);
+      const form = document.getElementById('categoryForm');
+      Object.entries(category).forEach(([key, value]) => {
+        if (form.elements[key]) form.elements[key].value = String(value);
+      });
+    };
+  });
+  document.querySelectorAll('[data-toggle-category]').forEach((button) => {
+    button.onclick = () => {
+      const category = categories.find((item) => item.id === button.dataset.toggleCategory);
+      category.active = !category.active;
+      saveAll();
+      render();
+    };
+  });
+}
+
 function mostFrequent(items) {
   const counts = items.reduce((acc, item) => {
     acc[item] = (acc[item] || 0) + 1;
@@ -1105,6 +1567,105 @@ function bindEvents() {
     renderHistory();
   });
   document.getElementById('exportHistoryCsv').addEventListener('click', exportHistoryCsv);
+  document.getElementById('shopSearch').addEventListener('input', (event) => {
+    state.shopSearch = event.target.value;
+    renderShop();
+  });
+  document.getElementById('shopCategoryFilter').addEventListener('change', (event) => {
+    state.shopCategory = event.target.value;
+    renderShop();
+  });
+  document.getElementById('shopBrandFilter').addEventListener('change', (event) => {
+    state.shopBrand = event.target.value;
+    renderShop();
+  });
+  document.getElementById('shopRatingFilter').addEventListener('change', (event) => {
+    state.shopRating = Number(event.target.value);
+    renderShop();
+  });
+  document.getElementById('shopShippingFilter').addEventListener('change', (event) => {
+    state.shopShipping = event.target.value;
+    renderShop();
+  });
+  document.getElementById('shopPromoFilter').addEventListener('change', (event) => {
+    state.shopPromo = event.target.value;
+    renderShop();
+  });
+  document.getElementById('shopSort').addEventListener('change', (event) => {
+    state.shopSort = event.target.value;
+    renderShop();
+  });
+  document.querySelectorAll('[data-shop-jump]').forEach((button) => {
+    button.addEventListener('click', () => document.getElementById(button.dataset.shopJump)?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  });
+  document.getElementById('deliveryAddressButton').addEventListener('click', () => alert('Entrega calculada no checkout. Informe o CEP no carrinho.'));
+  document.getElementById('favoritesButton').addEventListener('click', () => alert(`Favoritos: ${state.savedForLater.length} produto(s).`));
+  document.getElementById('clientLoginButton').addEventListener('click', () => openModal('clientAuthModal'));
+  document.getElementById('closeClientAuthModal').addEventListener('click', () => closeModal('clientAuthModal'));
+  document.getElementById('clientGoogleLogin').addEventListener('click', () => {
+    state.clientSession = { name: 'Cliente Google', cpf: '000.000.000-00', email: 'cliente.google@salescontrol.local', phone: '(11) 90000-0000', provider: 'google' };
+    saveAll();
+    closeModal('clientAuthModal');
+    renderShop();
+  });
+  document.getElementById('clientAuthForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const form = new FormData(event.target);
+    state.clientSession = { name: form.get('name'), cpf: form.get('cpf'), email: form.get('email'), phone: form.get('phone'), birthDate: form.get('birthDate'), provider: 'email' };
+    saveAll();
+    closeModal('clientAuthModal');
+    renderShop();
+  });
+  document.getElementById('cartButton').addEventListener('click', () => {
+    openModal('cartModal');
+    setCheckoutStep(0);
+    renderCart();
+  });
+  document.getElementById('closeCartModal').addEventListener('click', () => closeModal('cartModal'));
+  document.getElementById('applyCoupon').addEventListener('click', () => {
+    state.coupon = document.getElementById('couponCode').value.trim();
+    saveAll();
+    renderCart();
+  });
+  document.getElementById('calculateShipping').addEventListener('click', () => {
+    state.shippingCost = document.getElementById('shippingZip').value.trim() ? 18 : state.shippingCost;
+    renderCart();
+  });
+  document.querySelectorAll('[data-checkout-step]').forEach((button) => button.addEventListener('click', () => setCheckoutStep(Number(button.dataset.checkoutStep))));
+  document.getElementById('prevCheckoutStep').addEventListener('click', () => setCheckoutStep(state.checkoutStep - 1));
+  document.getElementById('nextCheckoutStep').addEventListener('click', () => setCheckoutStep(state.checkoutStep + 1));
+  document.getElementById('finishCheckout').addEventListener('click', finishCheckout);
+  document.querySelectorAll('[data-shipping]').forEach((button) => {
+    button.addEventListener('click', () => {
+      state.shippingMethod = button.dataset.shipping;
+      state.shippingCost = Number(button.dataset.cost);
+      document.querySelectorAll('[data-shipping]').forEach((node) => node.classList.toggle('active', node === button));
+      renderCart();
+    });
+  });
+  document.getElementById('checkoutPaymentForm').addEventListener('input', renderCheckoutConfirmation);
+  document.getElementById('clientCheckoutForm').addEventListener('input', renderCheckoutConfirmation);
+  document.getElementById('closeProductDetailModal').addEventListener('click', () => closeModal('productDetailModal'));
+  document.getElementById('categoryForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const form = new FormData(event.target);
+    const category = {
+      id: form.get('id') || `cat${Date.now()}`,
+      name: form.get('name'),
+      subcategory: form.get('subcategory'),
+      brand: form.get('brand'),
+      collection: form.get('collection'),
+      department: form.get('department'),
+      image: form.get('image'),
+      order: Number(form.get('order') || 1),
+      active: form.get('active') === 'true',
+      keywords: form.get('keywords'),
+    };
+    categories = [category, ...categories.filter((item) => item.id !== category.id)];
+    saveAll();
+    event.target.reset();
+    render();
+  });
   document.querySelectorAll('[data-report-export]').forEach((button) => {
     button.addEventListener('click', () => {
       if (button.dataset.reportExport === 'CSV') exportHistoryCsv();

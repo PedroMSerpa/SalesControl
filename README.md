@@ -34,6 +34,14 @@ Login administrador de teste:
 - Relatorios de vendas, vendedores, produtos, clientes, pagamentos, estoque, lucro, faturamento, descontos e cancelamentos, com exportacao simulada em PDF, Excel e CSV.
 - Notificacoes de estoque baixo, nova venda, meta atingida, pagamento atrasado, parcela proxima, produto sem estoque, venda cancelada e novo cliente.
 - Configuracoes da empresa com CNPJ, contato, logotipo, moeda, formas de pagamento, categorias, regras de desconto e informacoes do comprovante.
+- Area de loja para cliente com busca, categorias, banner, produtos em destaque, mais vendidos, ofertas, lancamentos, recomendados, recentes, frete gratis, cupons e beneficios.
+- Busca de produtos por nome, categoria, marca, codigo, palavra-chave e descricao, com sugestoes automaticas.
+- Painel de categorias para administrador e gerente com categoria, subcategoria, marca, colecao, departamento, imagem, ordem, status e termos relacionados.
+- Listagem de loja com imagem, preco original/promocional, desconto, parcelas, avaliacao, frete, prazo, destaque e disponibilidade.
+- Detalhe de produto com galeria, codigo, avaliacao, quantidade vendida, preco, pagamento, estoque, variacoes, garantia, devolucao, perguntas, avaliacoes e semelhantes.
+- Carrinho com quantidade, remocao, salvar para depois, cupom, frete, subtotal, desconto e total.
+- Checkout em etapas: identificacao, endereco, entrega, pagamento e confirmacao.
+- Cadastro/login do cliente simulado, preparado para futura integracao com Firebase Authentication.
 - Cadastro de clientes com CPF/CNPJ, telefone, e-mail, endereco, nascimento, observacoes, historico, status, ultimo contato e resumo individual.
 - Cadastro de produtos com codigo interno, codigo de barras, descricao, categoria, custo, venda, estoque, estoque minimo, imagem, fornecedor, status e data de cadastro.
 - Pesquisa, filtro por categoria, edicao, ativacao/desativacao e entrada/saida de estoque para produtos.
