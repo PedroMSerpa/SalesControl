@@ -420,6 +420,14 @@ button {
 .chart-panel canvas {
   width: 100%;
   min-height: 280px;
+  opacity: 0.98;
+  filter: drop-shadow(0 10px 20px rgba(37, 99, 235, 0.08));
+  transition: filter 260ms var(--motion), opacity 260ms var(--motion);
+}
+
+.chart-panel canvas.chart-animating {
+  opacity: 1;
+  filter: drop-shadow(0 14px 26px rgba(37, 99, 235, 0.14));
 }
 
 .goal-list,
@@ -465,7 +473,34 @@ button {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--primary);
+  background: linear-gradient(90deg, var(--primary), var(--cyan));
+  transform-origin: left center;
+  transition: transform 900ms var(--motion);
+}
+
+.reveal-item {
+  opacity: 0;
+  transform: translateY(24px) scale(0.985);
+  transition:
+    opacity 560ms var(--motion) var(--reveal-delay, 0ms),
+    transform 560ms var(--motion) var(--reveal-delay, 0ms),
+    border-color 180ms var(--motion),
+    box-shadow 180ms var(--motion);
+  will-change: opacity, transform;
+}
+
+.reveal-item .progress span {
+  transform: scaleX(0);
+}
+
+.reveal-item.reveal-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.reveal-item.reveal-visible .progress span,
+.content-view.active.is-entering .progress span {
+  transform: scaleX(1);
 }
 
 .table-wrap {

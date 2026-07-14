@@ -193,6 +193,9 @@ let reviews = JSON.parse(localStorage.getItem('sales-control-reviews') || 'null'
 let questions = JSON.parse(localStorage.getItem('sales-control-questions') || 'null') || defaultQuestions;
 let messages = JSON.parse(localStorage.getItem('sales-control-messages') || 'null') || defaultMessages;
 let returnRequests = JSON.parse(localStorage.getItem('sales-control-returns') || 'null') || defaultReturns;
+let revealObserver = null;
+let chartRevealObserver = null;
+const chartAnimations = new Map();
 
 function normalizeSales(rows) {
   return rows.map((sale, index) => {
@@ -1179,6 +1182,7 @@ function render() {
   drawLineChart();
   drawCategoryChart();
   drawPaymentChart();
+  setupScrollReveal();
   bindDynamicProductButtons();
 }
 
@@ -1193,12 +1197,20 @@ function clearCanvas(canvas) {
   return { context, width, height: Math.max(height, 280) };
 }
 
-function drawLineChart() {
+function prefersReducedMotion() {
+  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+}
+
+function easeOutCubic(value) {
+  return 1 - ((1 - value) ** 3);
+}
+
+function drawLineChart(options = {}) {
   const canvas = document.getElementById('salesChart');
   if (!canvas || !state.session) return;
   const mode = document.getElementById('chartMetric').value;
   const rows = mode === 'monthly' ? monthlySeries() : dailySeries(mode);
-  drawBarsOrLine(canvas, rows, mode === 'orders' ? 'line' : 'bar');
+  renderChart(canvas, rows, mode === 'orders' ? 'line' : 'bar', options.animate);
 }
 
 function dailySeries(mode) {
@@ -1221,7 +1233,32 @@ function monthlySeries() {
   return Object.entries(months).sort().map(([month, value]) => ({ label: month.split('-').reverse().join('/'), value }));
 }
 
-function drawBarsOrLine(canvas, rows, type = 'bar') {
+function renderChart(canvas, rows, type = 'bar', animate = false) {
+  if (!animate || prefersReducedMotion()) {
+    drawBarsOrLine(canvas, rows, type, 1);
+    return;
+  }
+
+  cancelAnimationFrame(chartAnimations.get(canvas.id));
+  const start = performance.now();
+  const duration = type === 'line' ? 980 : 860;
+  canvas.classList.add('chart-animating');
+
+  const frame = (now) => {
+    const progress = easeOutCubic(Math.min((now - start) / duration, 1));
+    drawBarsOrLine(canvas, rows, type, progress);
+    if (progress < 1) {
+      chartAnimations.set(canvas.id, requestAnimationFrame(frame));
+    } else {
+      canvas.classList.remove('chart-animating');
+      chartAnimations.delete(canvas.id);
+    }
+  };
+
+  chartAnimations.set(canvas.id, requestAnimationFrame(frame));
+}
+
+function drawBarsOrLine(canvas, rows, type = 'bar', progress = 1) {
   const { context, width, height } = clearCanvas(canvas);
   const styles = getComputedStyle(document.body);
   const max = Math.max(...rows.map((row) => row.value), 1);
@@ -1240,10 +1277,12 @@ function drawBarsOrLine(canvas, rows, type = 'bar') {
   if (type === 'line') {
     context.strokeStyle = styles.getPropertyValue('--primary');
     context.lineWidth = 3;
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
     context.beginPath();
     rows.forEach((row, index) => {
       const x = padding + index * step + step / 2;
-      const y = height - padding - (row.value / max) * (height - padding * 2);
+      const y = height - padding - ((row.value / max) * (height - padding * 2) * progress);
       if (index === 0) context.moveTo(x, y);
       else context.lineTo(x, y);
     });
@@ -1253,10 +1292,18 @@ function drawBarsOrLine(canvas, rows, type = 'bar') {
   rows.forEach((row, index) => {
     const x = padding + index * step + 10;
     const barWidth = Math.max(18, step - 20);
-    const barHeight = (row.value / max) * (height - padding * 2);
+    const barHeight = (row.value / max) * (height - padding * 2) * progress;
     const y = height - padding - barHeight;
-    context.fillStyle = styles.getPropertyValue('--primary');
-    if (type === 'bar') context.fillRect(x, y, barWidth, barHeight);
+    const gradient = context.createLinearGradient(0, y, 0, height - padding);
+    gradient.addColorStop(0, styles.getPropertyValue('--primary').trim());
+    gradient.addColorStop(1, styles.getPropertyValue('--cyan').trim() || styles.getPropertyValue('--primary').trim());
+    context.fillStyle = gradient;
+    if (type === 'bar') {
+      context.beginPath();
+      context.roundRect?.(x, y, barWidth, barHeight, 6);
+      if (context.roundRect) context.fill();
+      else context.fillRect(x, y, barWidth, barHeight);
+    }
     else {
       context.beginPath();
       context.arc(x + barWidth / 2, y, 4, 0, Math.PI * 2);
@@ -1268,24 +1315,75 @@ function drawBarsOrLine(canvas, rows, type = 'bar') {
   });
 }
 
-function drawCategoryChart() {
+function drawCategoryChart(options = {}) {
   const canvas = document.getElementById('categoryChart');
   if (!canvas || !state.session) return;
   const totals = products.reduce((acc, product) => {
     acc[product.category] = sales.filter((sale) => sale.productId === product.id && !['Cancelado', 'Cancelada'].includes(sale.status)).reduce((sum, sale) => sum + saleTotal(sale), acc[product.category] || 0);
     return acc;
   }, {});
-  drawBarsOrLine(canvas, Object.entries(totals).map(([label, value]) => ({ label, value })), 'bar');
+  renderChart(canvas, Object.entries(totals).map(([label, value]) => ({ label, value })), 'bar', options.animate);
 }
 
-function drawPaymentChart() {
+function drawPaymentChart(options = {}) {
   const canvas = document.getElementById('paymentChart');
   if (!canvas || !state.session) return;
   const totals = sales.reduce((acc, sale) => {
     acc[sale.payment] = (acc[sale.payment] || 0) + saleTotal(sale);
     return acc;
   }, {});
-  drawBarsOrLine(canvas, Object.entries(totals).map(([label, value]) => ({ label, value })), 'bar');
+  renderChart(canvas, Object.entries(totals).map(([label, value]) => ({ label, value })), 'bar', options.animate);
+}
+
+function animateVisibleChart(canvas) {
+  if (canvas.id === 'salesChart') drawLineChart({ animate: true });
+  if (canvas.id === 'categoryChart') drawCategoryChart({ animate: true });
+  if (canvas.id === 'paymentChart') drawPaymentChart({ animate: true });
+}
+
+function setupScrollReveal() {
+  const activeView = document.querySelector('.content-view.active');
+  if (!activeView) return;
+  const revealItems = activeView.querySelectorAll('.panel, .kpi-card, .goal-row, .goal-card, .customer-card, .product-card, .payment-card, .user-card, .shop-product-card, .category-pill, .promo-banner, .account-card, .order-card');
+  const charts = activeView.querySelectorAll('canvas');
+
+  if (prefersReducedMotion() || !('IntersectionObserver' in window)) {
+    revealItems.forEach((item) => item.classList.add('reveal-visible'));
+    charts.forEach((canvas) => animateVisibleChart(canvas));
+    return;
+  }
+
+  if (!revealObserver) {
+    revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('reveal-visible');
+        revealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+  }
+
+  if (!chartRevealObserver) {
+    chartRevealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        animateVisibleChart(entry.target);
+        chartRevealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.2 });
+  }
+
+  revealItems.forEach((item, index) => {
+    item.classList.add('reveal-item');
+    item.classList.remove('reveal-visible');
+    item.style.setProperty('--reveal-delay', `${Math.min((index % 7) * 55, 260)}ms`);
+    revealObserver.observe(item);
+  });
+
+  charts.forEach((canvas) => {
+    canvas.classList.add('chart-reveal');
+    chartRevealObserver.observe(canvas);
+  });
 }
 
 function switchView(view) {
@@ -1299,9 +1397,10 @@ function switchView(view) {
   document.querySelectorAll('.nav-item').forEach((node) => node.classList.toggle('active', node.dataset.view === view));
   document.getElementById('pageTitle').textContent = button.querySelector('span:last-child').textContent;
   setTimeout(() => {
-    drawLineChart();
-    drawCategoryChart();
-    drawPaymentChart();
+    drawLineChart({ animate: true });
+    drawCategoryChart({ animate: true });
+    drawPaymentChart({ animate: true });
+    setupScrollReveal();
   }, 0);
 }
 
@@ -1819,9 +1918,9 @@ function bindEvents() {
   document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
   document.getElementById('themeToggle').addEventListener('click', () => {
     document.body.classList.toggle('dark');
-    drawLineChart();
-    drawCategoryChart();
-    drawPaymentChart();
+    drawLineChart({ animate: true });
+    drawCategoryChart({ animate: true });
+    drawPaymentChart({ animate: true });
   });
   document.querySelectorAll('.nav-item, [data-view-target]').forEach((node) => node.addEventListener('click', () => switchView(node.dataset.view || node.dataset.viewTarget)));
   document.getElementById('globalSearch').addEventListener('input', (event) => {
@@ -1834,7 +1933,7 @@ function bindEvents() {
       renderTables();
     }
   });
-  document.getElementById('chartMetric').addEventListener('change', drawLineChart);
+  document.getElementById('chartMetric').addEventListener('change', () => drawLineChart({ animate: true }));
   document.getElementById('salesStatusFilter').addEventListener('change', (event) => {
     state.salesStatus = event.target.value;
     renderTables();
