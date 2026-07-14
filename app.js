@@ -1292,8 +1292,10 @@ function switchView(view) {
   const button = document.querySelector(`[data-view="${view}"]`);
   if (!button || button.classList.contains('hidden')) return;
   state.view = view;
-  document.querySelectorAll('.content-view').forEach((node) => node.classList.remove('active'));
-  document.getElementById(`${view}View`).classList.add('active');
+  const targetView = document.getElementById(`${view}View`);
+  document.querySelectorAll('.content-view').forEach((node) => node.classList.remove('active', 'is-entering'));
+  targetView.classList.add('active', 'is-entering');
+  window.setTimeout(() => targetView.classList.remove('is-entering'), 700);
   document.querySelectorAll('.nav-item').forEach((node) => node.classList.toggle('active', node.dataset.view === view));
   document.getElementById('pageTitle').textContent = button.querySelector('span:last-child').textContent;
   setTimeout(() => {

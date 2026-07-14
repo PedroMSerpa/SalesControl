@@ -13,6 +13,7 @@
   --red: #dc2626;
   --cyan: #0891b2;
   --shadow: 0 14px 35px rgba(16, 24, 40, 0.08);
+  --motion: cubic-bezier(0.2, 0.8, 0.2, 1);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -290,6 +291,41 @@ button {
 
 .content-view.active {
   display: block;
+  animation: viewEnter 420ms var(--motion) both;
+}
+
+.content-view.active.is-entering .kpi-card,
+.content-view.active.is-entering .panel,
+.content-view.active.is-entering .customer-card,
+.content-view.active.is-entering .product-card,
+.content-view.active.is-entering .payment-card,
+.content-view.active.is-entering .goal-card,
+.content-view.active.is-entering .user-card,
+.content-view.active.is-entering .shop-product-card,
+.content-view.active.is-entering .category-pill,
+.content-view.active.is-entering .promo-banner {
+  animation: cardEnter 520ms var(--motion) both;
+}
+
+.content-view.active.is-entering .panel:nth-of-type(2),
+.content-view.active.is-entering .kpi-card:nth-child(2),
+.content-view.active.is-entering .shop-product-card:nth-child(2),
+.content-view.active.is-entering .category-pill:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.content-view.active.is-entering .panel:nth-of-type(3),
+.content-view.active.is-entering .kpi-card:nth-child(3),
+.content-view.active.is-entering .shop-product-card:nth-child(3),
+.content-view.active.is-entering .category-pill:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+.content-view.active.is-entering .panel:nth-of-type(4),
+.content-view.active.is-entering .kpi-card:nth-child(4),
+.content-view.active.is-entering .shop-product-card:nth-child(4),
+.content-view.active.is-entering .category-pill:nth-child(4) {
+  animation-delay: 170ms;
 }
 
 .kpi-grid {
@@ -625,15 +661,31 @@ label select {
 }
 
 .auth-screen {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 480px);
+  grid-template-columns: minmax(280px, 0.85fr) minmax(320px, 0.7fr) minmax(320px, 480px);
   align-items: center;
   gap: 34px;
   min-height: 100vh;
   padding: 38px;
+  overflow: hidden;
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--primary) 14%, transparent), transparent 42%),
+    linear-gradient(135deg, color-mix(in srgb, var(--primary) 15%, transparent), transparent 38%),
+    linear-gradient(315deg, color-mix(in srgb, var(--green) 12%, transparent), transparent 38%),
     var(--bg);
+}
+
+.auth-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.76)),
+    url("https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1600&q=80") center / cover;
+  opacity: 0.24;
+  transform: scale(1.04);
+  animation: authBackdrop 14s var(--motion) infinite alternate;
 }
 
 .auth-screen.hidden {
@@ -641,9 +693,12 @@ label select {
 }
 
 .auth-brand {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: 22px;
   max-width: 620px;
+  animation: authSlideUp 720ms var(--motion) both;
 }
 
 .brand-mark {
@@ -656,6 +711,8 @@ label select {
   color: #fff;
   font-size: 1.5rem;
   font-weight: 800;
+  box-shadow: 0 16px 35px color-mix(in srgb, var(--primary) 34%, transparent);
+  animation: brandPulse 2.8s var(--motion) infinite;
 }
 
 .auth-brand h1 {
@@ -673,11 +730,109 @@ label select {
 }
 
 .auth-card {
+  position: relative;
+  z-index: 1;
   padding: 20px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface);
   box-shadow: var(--shadow);
+  animation: authCardIn 820ms var(--motion) 140ms both;
+}
+
+.auth-visual {
+  position: relative;
+  z-index: 1;
+  min-height: 430px;
+  border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    linear-gradient(160deg, rgba(22, 32, 51, 0.22), rgba(37, 99, 235, 0.18)),
+    var(--surface);
+  box-shadow: var(--shadow);
+  animation: authVisualIn 900ms var(--motion) 70ms both;
+}
+
+.auth-photo {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(16, 24, 40, 0.08), rgba(16, 24, 40, 0.5)),
+    url("https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=900&q=80") center / cover;
+  transform: scale(1.05);
+  animation: photoDrift 10s var(--motion) infinite alternate;
+}
+
+.auth-metric {
+  position: absolute;
+  display: grid;
+  gap: 4px;
+  min-width: 150px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 8px;
+  color: #fff;
+  background: rgba(16, 32, 51, 0.7);
+  box-shadow: 0 18px 42px rgba(16, 24, 40, 0.22);
+  backdrop-filter: blur(14px);
+}
+
+.auth-metric span {
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.auth-metric strong {
+  font-size: 1.25rem;
+}
+
+.auth-metric-sales {
+  left: 18px;
+  top: 22px;
+  animation: floatSoft 4.4s ease-in-out infinite;
+}
+
+.auth-metric-stock {
+  right: 18px;
+  bottom: 24px;
+  animation: floatSoft 4.8s ease-in-out 420ms infinite;
+}
+
+.auth-flow {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 110px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.auth-flow span {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.38);
+  overflow: hidden;
+}
+
+.auth-flow span::after {
+  content: "";
+  display: block;
+  width: 46%;
+  height: 100%;
+  border-radius: inherit;
+  background: #fff;
+  animation: flowBar 1.9s ease-in-out infinite;
+}
+
+.auth-flow span:nth-child(2)::after {
+  animation-delay: 180ms;
+}
+
+.auth-flow span:nth-child(3)::after {
+  animation-delay: 360ms;
 }
 
 .auth-tabs {
@@ -1047,6 +1202,7 @@ label select {
 }
 
 .promo-banner {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1054,10 +1210,27 @@ label select {
   min-height: 180px;
   padding: 24px;
   border-radius: 8px;
+  overflow: hidden;
   background:
-    linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(8, 145, 178, 0.84)),
+    linear-gradient(135deg, rgba(22, 32, 51, 0.74), rgba(37, 99, 235, 0.72)),
+    url("https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1400&q=80") center / cover,
     var(--primary);
   color: #fff;
+}
+
+.promo-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: translateX(-100%);
+  animation: shineAcross 5.5s ease-in-out infinite;
+}
+
+.promo-banner > * {
+  position: relative;
+  z-index: 1;
 }
 
 .promo-banner h2 {
@@ -1087,12 +1260,14 @@ label select {
   background: var(--surface-soft);
   color: var(--text);
   text-align: left;
+  transition: transform 180ms var(--motion), border-color 180ms var(--motion), background 180ms var(--motion);
 }
 
 .category-pill.active,
 .category-pill:hover {
   border-color: var(--primary);
   background: color-mix(in srgb, var(--primary) 12%, var(--surface));
+  transform: translateY(-2px);
 }
 
 .category-pill span {
@@ -1113,6 +1288,13 @@ label select {
   border-radius: 8px;
   background: var(--surface);
   box-shadow: none;
+  transition: transform 180ms var(--motion), box-shadow 180ms var(--motion), border-color 180ms var(--motion);
+}
+
+.shop-product-card:hover {
+  border-color: color-mix(in srgb, var(--primary) 44%, var(--border));
+  box-shadow: var(--shadow);
+  transform: translateY(-3px);
 }
 
 .product-image {
@@ -1135,6 +1317,11 @@ label select {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 380ms var(--motion);
+}
+
+.shop-product-card:hover .product-image img {
+  transform: scale(1.045);
 }
 
 .rating-line {
@@ -1407,6 +1594,141 @@ label select {
   padding: 0;
 }
 
+@keyframes viewEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes authSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes authCardIn {
+  from {
+    opacity: 0;
+    transform: translateX(24px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes authVisualIn {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes authBackdrop {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: scale(1.08) translate3d(-12px, -10px, 0);
+  }
+}
+
+@keyframes photoDrift {
+  from {
+    transform: scale(1.05) translateX(0);
+  }
+
+  to {
+    transform: scale(1.1) translateX(-10px);
+  }
+}
+
+@keyframes brandPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes floatSoft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes flowBar {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(235%);
+  }
+}
+
+@keyframes shineAcross {
+  0%,
+  58% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (max-width: 1180px) {
+  .auth-screen {
+    grid-template-columns: minmax(280px, 1fr) minmax(320px, 460px);
+  }
+
+  .auth-visual {
+    grid-column: 1 / -1;
+    min-height: 300px;
+    order: 3;
+  }
+}
+
 @media (max-width: 760px) {
   .table-actions {
     min-width: 360px;
@@ -1453,5 +1775,27 @@ label select {
 
   .shop-stepper {
     grid-template-columns: repeat(6, 120px);
+  }
+}
+
+@media (max-width: 760px) {
+  .auth-visual {
+    min-height: 250px;
+    order: initial;
+  }
+
+  .auth-metric {
+    min-width: 128px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
   }
 }
